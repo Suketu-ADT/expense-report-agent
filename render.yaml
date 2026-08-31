@@ -1,0 +1,42 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: expense-agent-backend
+    env: python
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DEVELOPMENT_MODE
+        value: true
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FINANCE_EMAIL
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+
+  # Frontend Static Site
+  - type: web
+    name: expense-agent-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "./dist"
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: expense-agent-backend
+          envVarKey: RENDER_EXTERNAL_URL
+          property: url
