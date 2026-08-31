@@ -1,11 +1,16 @@
 import axios from 'axios';
 
 let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-if (API_URL && !API_URL.startsWith('http')) {
-    API_URL = `https://${API_URL}`;
-}
-if (API_URL && !API_URL.endsWith('/api') && !API_URL.includes('localhost')) {
-    API_URL = `${API_URL}/api`;
+if (API_URL) {
+    if (!API_URL.startsWith('http')) {
+        API_URL = `https://${API_URL}`;
+    }
+    if (API_URL.endsWith('/')) {
+        API_URL = API_URL.slice(0, -1);
+    }
+    if (!API_URL.endsWith('/api') && !API_URL.includes('localhost')) {
+        API_URL = `${API_URL}/api`;
+    }
 }
 
 export const api = {
