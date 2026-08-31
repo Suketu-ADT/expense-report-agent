@@ -38,4 +38,4 @@ services:
         fromService:
           type: web
           name: expense-agent-backend
-          property: url
+          property: host
