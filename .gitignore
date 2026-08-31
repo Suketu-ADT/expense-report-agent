@@ -1,0 +1,26 @@
+# Environment variables (Crucial to ignore to protect your API keys and passwords)
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+backend/.venv/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Database
+backend/expenses.db
+backend/data/*.db
+
+# Generated reports and emails
+backend/reports/
+!backend/reports/.gitkeep
+
+# IDEs and OS files
+.vscode/
+.idea/
+.DS_Store

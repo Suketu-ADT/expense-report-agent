@@ -1,0 +1,6 @@
+date,merchant,amount,currency,category_hint
+2026-07-03,IndiGo Airlines,8450,INR,Airfare
+2026-07-03,Taj Hotel Mumbai,12000,INR,Lodging
+missing,Cafe Coffee Day,650,INR,Meals
+2026-07-05,Uber,480,INR,Ground Transport
+2026-07-05,Uber,480,INR,Ground Transport
