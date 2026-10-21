@@ -282,4 +282,4 @@ Documented honestly so nobody is surprised:
 
 ## Authors
 
-Rakshit Girase and Suketu Mishra — T.Y. B.Tech (AIA), *Agentic AI* (23CSE4018).
+Rakshit Girase, Anuska Kumari and Suketu Mishra — L.Y. B.Tech (AIA-08), *Agentic AI*.
