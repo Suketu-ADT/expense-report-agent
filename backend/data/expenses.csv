@@ -1,6 +1,393 @@
-date,merchant,amount,currency,category_hint
-2026-07-03,IndiGo Airlines,8450,INR,Airfare
-2026-07-03,Taj Hotel Mumbai,12000,INR,Lodging
-missing,Cafe Coffee Day,650,INR,Meals
-2026-07-05,Uber,480,INR,Ground Transport
-2026-07-05,Uber,480,INR,Ground Transport
+date,expense_id,description,amount,currency
+2026-06-28,BIG-0388,IndiGo Flight Delhi to Goa,6400,INR
+2026-06-30,BIG-0389,Taj Hotel Mumbai,8200,INR
+2026-07-01,BIG-0024,Zomato Team Order,3520,INR
+2026-07-01,BIG-0073,Printing and Binding,2780,INR
+2026-07-01,BIG-0090,Ola Cab Office to Hotel,590,INR
+2026-07-01,BIG-0116,Ola Cab Office to Hotel,2050,INR
+2026-07-01,BIG-0117,Marriott Hotel Jaipur,5800,INR
+2026-07-01,BIG-0181,Marriott Hotel Jaipur,3900,INR
+2026-07-01,BIG-0183,Metro Pass,980,INR
+2026-07-01,BIG-0222,IndiGo Flight Pune to Delhi,8100,INR
+2026-07-01,BIG-0244,Marriott Hotel Jaipur,5300,INR
+2026-07-01,BIG-0256,Parking Charges,4170,INR
+2026-07-01,BIG-0282,Marriott Hotel Jaipur,6600,INR
+2026-07-02,BIG-0159,Metro Pass,680,INR
+2026-07-02,BIG-0199,Coffee Meeting,2720,INR
+2026-07-02,BIG-0234,Ola Outstation Taxi,1430,INR
+2026-07-02,BIG-0315,Swiggy Late Night Food,1840,INR
+2026-07-02,BIG-0319,Uber Airport Transfer,650,INR
+Missing,BIG-0372,Working Lunch Restaurant,1320,INR
+Missing,BIG-0375,Breakfast Cafe,380,INR
+2026-07-03,BIG-0118,Office Stationery Purchase,5500,INR
+2026-07-03,BIG-0150,Ola Cab Office to Hotel,2000,INR
+2026-07-03,BIG-0179,Hilton Hotel Chennai,19000,INR
+2026-07-03,BIG-0184,Marriott Hotel Delhi,18700,INR
+2026-07-03,BIG-0191,Marriott Hotel Delhi,5300,INR
+2026-07-03,BIG-0208,IndiGo Flight Delhi to Mumbai,11800,INR
+2026-07-03,BIG-0224,Hyatt Hotel Hyderabad,19400,INR
+2026-07-03,BIG-0230,IndiGo Flight Mumbai to Bengaluru,5600,INR
+2026-07-03,BIG-0293,Emirates Flight Delhi to Dubai,8350,INR
+2026-07-03,BIG-0324,Courier Charges,5190,INR
+2026-07-03,BIG-0330,Hilton Hotel Kolkata,15900,INR
+2026-07-03,BIG-0338,Visa Application Fee,3810,INR
+2026-07-04,BIG-0005,Team Lunch Restaurant,2650,INR
+2026-07-04,BIG-0019,Vistara Flight Mumbai to Goa,13300,INR
+2026-07-04,BIG-0074,Vistara Flight Bengaluru to Hyderabad,4050,INR
+2026-07-04,BIG-0085,Taj Hotel Mumbai,16000,INR
+2026-07-04,BIG-0110,Ola Cab Office to Hotel,2710,INR
+2026-07-04,BIG-0135,Marriott Hotel Pune,13200,INR
+2026-07-04,BIG-0192,Coffee Meeting,2950,INR
+2026-07-04,BIG-0206,Air India Flight Chennai to Kolkata,5250,INR
+2026-07-04,BIG-0219,Conference Registration Fee,6200,INR
+2026-07-04,BIG-0261,Swiggy Late Night Food,3470,INR
+2026-07-04,BIG-0351,Courier Charges,1470,INR
+2026-07-05,BIG-0039,Vistara Flight Bengaluru to Hyderabad,8850,INR
+2026-07-05,BIG-0042,Uber Intercity Ride,1150,INR
+2026-07-05,BIG-0054,Marriott Hotel Jaipur,19100,INR
+2026-07-05,BIG-0067,Zomato Team Order,2870,INR
+2026-07-05,BIG-0086,Taj Hotel Bengaluru,5300,INR
+2026-07-05,BIG-0093,Zomato Team Order,4030,INR
+2026-07-05,BIG-0148,Team Lunch Restaurant,4130,INR
+2026-07-05,BIG-0156,Uber Airport Transfer,1830,INR
+2026-07-05,BIG-0167,Marriott Hotel Jaipur,18400,INR
+2026-07-05,BIG-0175,Vistara Flight Mumbai to Goa,11200,INR
+2026-07-05,BIG-0194,Parking Charges,340,INR
+2026-07-05,BIG-0197,Swiggy Late Night Food,2140,INR
+2026-07-05,BIG-0253,Laundry Service,870,INR
+2026-07-05,BIG-0270,Hilton Hotel Kolkata,15100,INR
+2026-07-05,BIG-0292,Uber Intercity Ride,2130,INR
+2026-07-05,BIG-0322,Coffee Meeting,400,INR
+2026-07-05,BIG-0334,Hyatt Hotel Goa,12500,INR
+2026-07-05,BIG-0349,Uber Airport Transfer,2580,INR
+2026-07-05,BIG-0365,Hyatt Hotel Goa,12500,INR
+07-18-2026,BIG-0377,Zomato Team Order,1450,INR
+2026-07-06,BIG-0056,Client Dinner,1720,INR
+2026-07-06,BIG-0128,Bus Ticket Pune to Mumbai,1180,INR
+2026-07-06,BIG-0164,Marriott Hotel Jaipur,18600,INR
+2026-07-06,BIG-0174,Air India Flight Mumbai to Delhi,13850,INR
+2026-07-06,BIG-0237,Working Lunch Restaurant,2890,INR
+2026-07-06,BIG-0289,Laundry Service,2310,INR
+2026-07-06,BIG-0297,Taj Hotel Bengaluru,9400,INR
+2026-07-07,BIG-0007,Laundry Service,4460,INR
+2026-07-07,BIG-0035,Courier Charges,4020,INR
+2026-07-07,BIG-0100,Metro Pass,1020,INR
+2026-07-07,BIG-0112,Coffee Meeting,2840,INR
+2026-07-07,BIG-0147,Uber Client Visit,1600,INR
+2026-07-07,BIG-0149,Cafe Coffee Day,3970,INR
+2026-07-07,BIG-0280,Team Lunch Restaurant,610,INR
+2026-07-07,BIG-0288,IndiGo Flight Mumbai to Bengaluru,12650,INR
+2026-07-07,BIG-0342,Ola Cab Office to Hotel,550,INR
+2026-07-08,BIG-0097,Vistara Flight Bengaluru to Hyderabad,8850,INR
+2026-07-08,BIG-0099,Visa Application Fee,6190,INR
+2026-07-08,BIG-0166,Ola Outstation Taxi,170,INR
+2026-07-08,BIG-0247,IndiGo Flight Delhi to Mumbai,10750,INR
+2026-07-08,BIG-0251,Hyatt Hotel Goa,13700,INR
+2026-07-08,BIG-0264,Ola Cab Office to Hotel,2260,INR
+2026-07-09,BIG-0070,Uber Client Visit,1460,INR
+2026-07-09,BIG-0111,IndiGo Flight Pune to Delhi,7350,INR
+2026-07-09,BIG-0134,Starbucks Client Meeting,2370,INR
+2026-07-09,BIG-0151,Ola Cab Office to Hotel,380,INR
+2026-07-09,BIG-0207,Starbucks Client Meeting,2330,INR
+2026-07-09,BIG-0303,Ola Cab Office to Hotel,1520,INR
+2026-07-09,BIG-0339,Cafe Coffee Day,960,INR
+2026-07-10,BIG-0082,Printing and Binding,4570,INR
+2026-07-10,BIG-0113,Hyatt Hotel Hyderabad,8500,INR
+2026-07-10,BIG-0178,Breakfast Cafe,4030,INR
+2026-07-10,BIG-0202,Uber Client Visit,2290,INR
+2026-07-10,BIG-0216,Bus Ticket Pune to Mumbai,2220,INR
+2026-07-10,BIG-0255,Office Stationery Purchase,2970,INR
+2026-07-10,BIG-0269,Coffee Meeting,3500,INR
+2026-07-10,BIG-0285,Uber Intercity Ride,730,INR
+2026-07-10,BIG-0304,Air India Flight Mumbai to Delhi,9450,INR
+2026-07-10,BIG-0332,Starbucks Client Meeting,3330,INR
+2026-07-10,BIG-0346,Ola Cab Office to Hotel,1780,INR
+2026-07-10,BIG-0354,Office Stationery Purchase,6030,INR
+2026-07-10,BIG-0361,Office Stationery Purchase,6030,INR
+2026-07-11,BIG-0028,Uber Airport Transfer,2340,INR
+2026-07-11,BIG-0037,Swiggy Late Night Food,800,INR
+2026-07-11,BIG-0058,Metro Pass,1360,INR
+2026-07-11,BIG-0071,Uber Client Visit,880,INR
+2026-07-11,BIG-0077,Uber Airport Transfer,2600,INR
+2026-07-11,BIG-0084,Team Lunch Restaurant,2360,INR
+2026-07-11,BIG-0095,Vistara Flight Mumbai to Goa,12550,INR
+2026-07-11,BIG-0120,Ola Cab Office to Hotel,380,INR
+2026-07-11,BIG-0132,Ola Cab Office to Hotel,1260,INR
+2026-07-11,BIG-0154,Swiggy Late Night Food,1560,INR
+2026-07-11,BIG-0155,Metro Pass,1410,INR
+2026-07-11,BIG-0180,Airport Food Court,800,INR
+2026-07-11,BIG-0243,Conference Registration Fee,4510,INR
+2026-07-11,BIG-0352,Hilton Hotel Kolkata,4500,INR
+2026-07-11,BIG-0356,Marriott Hotel Jaipur,3400,INR
+2026-07-12,BIG-0032,Printing and Binding,5890,INR
+2026-07-12,BIG-0044,IndiGo Flight Mumbai to Bengaluru,4350,INR
+2026-07-12,BIG-0063,Ola Cab Office to Hotel,2690,INR
+2026-07-12,BIG-0088,Airport Food Court,2500,INR
+2026-07-12,BIG-0105,Vistara Flight Delhi to Pune,4700,INR
+2026-07-12,BIG-0115,Bus Ticket Pune to Mumbai,2640,INR
+2026-07-12,BIG-0124,Working Lunch Restaurant,3870,INR
+2026-07-12,BIG-0163,Swiggy Late Night Food,2840,INR
+2026-07-12,BIG-0188,Airport Food Court,2030,INR
+2026-07-12,BIG-0195,Metro Pass,870,INR
+2026-07-12,BIG-0198,Vistara Flight Delhi to Pune,9800,INR
+2026-07-12,BIG-0240,Bus Ticket Pune to Mumbai,340,INR
+2026-07-12,BIG-0246,Taxi Airport Pickup,1480,INR
+2026-07-12,BIG-0267,Airport Food Court,2970,INR
+2026-07-12,BIG-0276,Visa Application Fee,5430,INR
+2026-07-12,BIG-0278,Coffee Meeting,3770,INR
+2026-07-12,BIG-0294,Team Lunch Restaurant,1980,INR
+2026-07-12,BIG-0311,Uber Intercity Ride,1920,INR
+2026-07-12,BIG-0320,Vistara Flight Delhi to Pune,4350,INR
+2026-07-12,BIG-0341,Cafe Coffee Day,2050,INR
+2026-07-12,BIG-0347,Uber Airport Transfer,2770,INR
+2026-07-12,BIG-0363,Printing and Binding,5890,INR
+2026-07-12,BIG-0369,Coffee Meeting,3770,INR
+2026-07-13,BIG-0013,Working Lunch Restaurant,1880,INR
+2026-07-13,BIG-0015,Coffee Meeting,3700,INR
+2026-07-13,BIG-0023,Laundry Service,5260,INR
+2026-07-13,BIG-0136,Coffee Meeting,2020,INR
+2026-07-13,BIG-0140,Swiggy Late Night Food,420,INR
+2026-07-13,BIG-0211,Hyatt Hotel Goa,15500,INR
+2026-07-13,BIG-0215,Working Lunch Restaurant,3980,INR
+2026-07-13,BIG-0236,IndiGo Flight Delhi to Mumbai,3950,INR
+2026-07-13,BIG-0279,Ola Outstation Taxi,1610,INR
+2026-07-13,BIG-0283,Client Dinner,650,INR
+2026-07-13,BIG-0336,Client Dinner,960,INR
+2026-07-14,BIG-0014,Laundry Service,5660,INR
+2026-07-14,BIG-0055,Marriott Hotel Pune,10100,INR
+2026-07-14,BIG-0068,Air India Flight Mumbai to Delhi,4850,INR
+2026-07-14,BIG-0072,Hyatt Hotel Hyderabad,4300,INR
+2026-07-14,BIG-0081,Uber Airport Transfer,2080,INR
+2026-07-14,BIG-0083,Uber Client Visit,890,INR
+2026-07-14,BIG-0089,Airport Food Court,1140,INR
+2026-07-14,BIG-0126,Cafe Coffee Day,860,INR
+2026-07-14,BIG-0139,Breakfast Cafe,2260,INR
+2026-07-14,BIG-0254,Vistara Flight Mumbai to Goa,7150,INR
+2026-07-14,BIG-0260,Working Lunch Restaurant,3150,INR
+2026-07-14,BIG-0287,Starbucks Client Meeting,2030,INR
+2026-07-14,BIG-0295,Uber Airport Transfer,1190,INR
+2026-07-14,BIG-0310,Taxi Airport Pickup,1190,INR
+2026-07-14,BIG-0317,Uber Client Visit,2180,INR
+2026-07-14,BIG-0328,Ola Outstation Taxi,2610,INR
+2026-07-14,BIG-0333,Uber Client Visit,2250,INR
+2026-07-14,BIG-0382,Printing and Binding,,INR
+2026-07-14,BIG-0383,Hyatt Hotel Dubai,410,USD
+2026-07-15,BIG-0021,Courier Charges,4130,INR
+2026-07-15,BIG-0189,Metro Pass,1800,INR
+2026-07-15,BIG-0235,Cafe Coffee Day,2340,INR
+2026-07-15,BIG-0290,Air India Flight Chennai to Kolkata,6350,INR
+2026-07-15,BIG-0312,Parking Charges,4950,INR
+2026-07-15,BIG-0325,Parking Charges,380,INR
+2026-07-15,BIG-0384,Dubai Taxi Airport Transfer,38,EUR
+2026-07-16,BIG-0020,Uber Intercity Ride,1360,INR
+2026-07-16,BIG-0026,Cafe Coffee Day,1230,INR
+2026-07-16,BIG-0031,Hilton Hotel Kolkata,18200,INR
+2026-07-16,BIG-0045,Uber Airport Transfer,160,INR
+2026-07-16,BIG-0143,Working Lunch Restaurant,3600,INR
+2026-07-16,BIG-0186,Marriott Hotel Delhi,15000,INR
+2026-07-16,BIG-0210,Conference Registration Fee,2100,INR
+2026-07-16,BIG-0212,Hilton Hotel Chennai,10700,INR
+2026-07-16,BIG-0214,Emirates Flight Delhi to Dubai,10100,INR
+2026-07-16,BIG-0229,Ola Outstation Taxi,1850,INR
+2026-07-16,BIG-0242,Mobile Data Pack Recharge,5370,INR
+2026-07-16,BIG-0245,Uber Client Visit,2710,INR
+2026-07-16,BIG-0331,Coffee Meeting,1840,INR
+2026-07-16,BIG-0348,Ola Outstation Taxi,2040,INR
+2026-07-16,BIG-0357,Hilton Hotel Chennai,4900,INR
+2026-07-16,BIG-0360,Bus Ticket Pune to Mumbai,2630,INR
+2026-07-16,BIG-0385,Hotel Breakfast Dubai,22,GBP
+2026-07-16,BIG-0367,Marriott Hotel Delhi,15000,INR
+15/07/2026,BIG-0376,Hilton Hotel Chennai,9800,INR
+2026-07-17,BIG-0009,Airport Food Court,4200,INR
+2026-07-17,BIG-0053,Taj Hotel Mumbai,5500,INR
+2026-07-17,BIG-0109,Breakfast Cafe,4050,INR
+2026-07-17,BIG-0233,Ola Cab Office to Hotel,1570,INR
+2026-07-17,BIG-0238,Marriott Hotel Pune,13200,INR
+2026-07-17,BIG-0252,Ola Cab Office to Hotel,1740,INR
+2026-07-17,BIG-0268,Laundry Service,1690,INR
+2026-07-17,BIG-0277,Ola Outstation Taxi,130,INR
+2026-07-17,BIG-0296,Metro Pass,2020,INR
+2026-07-18,BIG-0003,Uber Intercity Ride,2210,INR
+2026-07-18,BIG-0010,Taxi Airport Pickup,330,INR
+2026-07-18,BIG-0027,Working Lunch Restaurant,3430,INR
+2026-07-18,BIG-0034,IndiGo Flight Delhi to Mumbai,8650,INR
+2026-07-18,BIG-0092,Taj Hotel Mumbai,3500,INR
+2026-07-18,BIG-0094,Courier Charges,5480,INR
+2026-07-18,BIG-0101,Working Lunch Restaurant,2740,INR
+2026-07-18,BIG-0201,Bus Ticket Pune to Mumbai,1360,INR
+2026-07-18,BIG-0205,Bus Ticket Pune to Mumbai,1750,INR
+2026-07-18,BIG-0220,Ola Outstation Taxi,1680,INR
+2026-07-18,BIG-0226,Uber Client Visit,2530,INR
+2026-07-18,BIG-0249,Ola Cab Office to Hotel,920,INR
+2026-07-18,BIG-0265,Coffee Meeting,1530,INR
+2026-07-18,BIG-0291,Client Dinner,3870,INR
+2026-07-18,BIG-0316,Metro Pass,1550,INR
+2026-07-18,BIG-0329,Zomato Team Order,2750,INR
+2026-07-18,BIG-0358,Parking Charges,4490,INR
+2026-07-18,BIG-0378,Uber Intercity Ride,,INR
+2026-07-18,BIG-0380,Client Dinner,missing,INR
+2026-07-18,BIG-0362,Ola Outstation Taxi,1680,INR
+2026-07-19,BIG-0004,Bus Ticket Pune to Mumbai,2130,INR
+2026-07-19,BIG-0016,Printing and Binding,5510,INR
+2026-07-19,BIG-0064,Taxi Airport Pickup,1610,INR
+2026-07-19,BIG-0066,Coffee Meeting,3120,INR
+2026-07-19,BIG-0241,Vistara Flight Delhi to Pune,14300,INR
+2026-07-19,BIG-0343,Client Dinner,1750,INR
+2026-07-19,BIG-0386,Tokyo Metro Day Pass,1200,JPY
+2026-07-20,BIG-0048,Marriott Hotel Jaipur,6900,INR
+2026-07-20,BIG-0076,Taxi Airport Pickup,2200,INR
+2026-07-20,BIG-0119,Cafe Coffee Day,2320,INR
+2026-07-20,BIG-0121,Client Dinner,1710,INR
+2026-07-20,BIG-0142,Hilton Hotel Chennai,13500,INR
+2026-07-20,BIG-0146,Hyatt Hotel Goa,12400,INR
+2026-07-20,BIG-0161,Metro Pass,2750,INR
+2026-07-20,BIG-0162,Vistara Flight Mumbai to Goa,14250,INR
+2026-07-20,BIG-0177,Marriott Hotel Pune,10600,INR
+2026-07-20,BIG-0218,Coffee Meeting,290,INR
+2026-07-20,BIG-0248,Vistara Flight Bengaluru to Hyderabad,13900,INR
+2026-07-20,BIG-0308,Uber Airport Transfer,2580,INR
+2026-07-20,BIG-0321,Laundry Service,800,INR
+2026-07-20,BIG-0387,Dubai Mall Parking,45,AED
+2026-07-20,BIG-0364,Laundry Service,800,INR
+Missing,BIG-0374,Uber Client Visit,410,INR
+2026-07-21,BIG-0001,Vistara Flight Mumbai to Goa,14000,INR
+2026-07-21,BIG-0011,Working Lunch Restaurant,750,INR
+2026-07-21,BIG-0050,IndiGo Flight Pune to Delhi,4150,INR
+2026-07-21,BIG-0052,Bus Ticket Pune to Mumbai,2440,INR
+2026-07-21,BIG-0087,Coffee Meeting,2780,INR
+2026-07-21,BIG-0102,Metro Pass,600,INR
+2026-07-21,BIG-0144,Team Lunch Restaurant,3220,INR
+2026-07-21,BIG-0160,Uber Client Visit,2060,INR
+2026-07-21,BIG-0204,Client Dinner,1730,INR
+2026-07-21,BIG-0231,Team Lunch Restaurant,1330,INR
+2026-07-21,BIG-0239,Uber Intercity Ride,850,INR
+2026-07-21,BIG-0300,Taj Hotel Bengaluru,10500,INR
+2026-07-21,BIG-0355,Uber Client Visit,2460,INR
+2026-07-21,BIG-0381,Metro Pass,missing,INR
+Missing,BIG-0373,Parking Charges,220,INR
+2026-07-22,BIG-0022,Metro Pass,1610,INR
+2026-07-22,BIG-0040,Printing and Binding,690,INR
+2026-07-22,BIG-0078,Bus Ticket Pune to Mumbai,1240,INR
+2026-07-22,BIG-0079,Visa Application Fee,5620,INR
+2026-07-22,BIG-0137,Breakfast Cafe,3060,INR
+2026-07-22,BIG-0271,Airport Food Court,2740,INR
+Missing,BIG-0371,Taxi Airport Pickup,740,INR
+2026-07-23,BIG-0012,Metro Pass,160,INR
+2026-07-23,BIG-0029,Client Dinner,1940,INR
+2026-07-23,BIG-0049,Coffee Meeting,1120,INR
+2026-07-23,BIG-0065,Ola Outstation Taxi,390,INR
+2026-07-23,BIG-0129,Hyatt Hotel Goa,7100,INR
+2026-07-23,BIG-0141,Uber Airport Transfer,810,INR
+2026-07-23,BIG-0168,Zomato Team Order,3300,INR
+2026-07-23,BIG-0171,Starbucks Client Meeting,2620,INR
+2026-07-23,BIG-0182,Air India Flight Chennai to Kolkata,10050,INR
+2026-07-23,BIG-0232,Air India Flight Mumbai to Delhi,4550,INR
+2026-07-23,BIG-0262,Uber Airport Transfer,640,INR
+2026-07-23,BIG-0263,Airport Food Court,1080,INR
+2026-07-23,BIG-0299,Airport Food Court,3340,INR
+2026-07-23,BIG-0323,IndiGo Flight Pune to Delhi,6250,INR
+2026-07-23,BIG-0335,Marriott Hotel Pune,16800,INR
+2026-07-23,BIG-0353,Starbucks Client Meeting,4090,INR
+2026-07-24,BIG-0069,Taj Hotel Mumbai,16700,INR
+2026-07-24,BIG-0106,Zomato Team Order,730,INR
+2026-07-24,BIG-0114,Airport Food Court,940,INR
+2026-07-24,BIG-0131,Ola Outstation Taxi,510,INR
+2026-07-24,BIG-0152,Office Stationery Purchase,1330,INR
+2026-07-24,BIG-0170,Airport Food Court,2320,INR
+2026-07-24,BIG-0250,IndiGo Flight Delhi to Mumbai,7450,INR
+2026-07-25,BIG-0057,Zomato Team Order,2040,INR
+2026-07-25,BIG-0125,IndiGo Flight Mumbai to Bengaluru,12450,INR
+2026-07-25,BIG-0145,Air India Flight Mumbai to Delhi,7300,INR
+2026-07-25,BIG-0157,Air India Flight Chennai to Kolkata,6500,INR
+2026-07-25,BIG-0176,Starbucks Client Meeting,2970,INR
+2026-07-25,BIG-0213,Marriott Hotel Pune,11000,INR
+2026-07-25,BIG-0217,Marriott Hotel Jaipur,8800,INR
+2026-07-25,BIG-0286,Courier Charges,5800,INR
+2026-07-25,BIG-0313,Uber Intercity Ride,1060,INR
+2026-07-25,BIG-0344,Taxi Airport Pickup,610,INR
+2026-07-25,BIG-0366,Starbucks Client Meeting,2970,INR
+2026-07-26,BIG-0017,Laundry Service,3410,INR
+2026-07-26,BIG-0047,Emirates Flight Delhi to Dubai,9900,INR
+2026-07-26,BIG-0059,Working Lunch Restaurant,660,INR
+2026-07-26,BIG-0062,Swiggy Late Night Food,1820,INR
+2026-07-26,BIG-0091,Uber Intercity Ride,2500,INR
+2026-07-26,BIG-0104,Breakfast Cafe,3000,INR
+2026-07-26,BIG-0130,Visa Application Fee,2750,INR
+2026-07-26,BIG-0221,Hilton Hotel Kolkata,17600,INR
+2026-07-26,BIG-0223,Taj Hotel Mumbai,7900,INR
+2026-07-26,BIG-0272,Air India Flight Mumbai to Delhi,11700,INR
+2026-07-26,BIG-0298,Vistara Flight Delhi to Pune,10250,INR
+2026-07-26,BIG-0314,Swiggy Late Night Food,3370,INR
+2026-07-26,BIG-0379,Courier Charges,,INR
+2026-07-26,BIG-0368,Breakfast Cafe,3000,INR
+2026-07-27,BIG-0006,Client Dinner,1990,INR
+2026-07-27,BIG-0018,Vistara Flight Bengaluru to Hyderabad,12000,INR
+2026-07-27,BIG-0096,Taxi Airport Pickup,240,INR
+2026-07-27,BIG-0123,Breakfast Cafe,2270,INR
+2026-07-27,BIG-0158,Swiggy Late Night Food,1280,INR
+2026-07-27,BIG-0172,Conference Registration Fee,980,INR
+2026-07-27,BIG-0185,Airport Food Court,980,INR
+2026-07-27,BIG-0225,Taj Hotel Mumbai,7100,INR
+2026-07-27,BIG-0257,Client Dinner,570,INR
+2026-07-27,BIG-0259,Working Lunch Restaurant,3110,INR
+2026-07-27,BIG-0273,Taxi Airport Pickup,1610,INR
+2026-07-27,BIG-0275,Printing and Binding,5240,INR
+2026-07-27,BIG-0281,Hilton Hotel Kolkata,11600,INR
+2026-07-27,BIG-0302,Metro Pass,720,INR
+2026-07-27,BIG-0306,Bus Ticket Pune to Mumbai,530,INR
+2026-07-27,BIG-0327,Swiggy Late Night Food,2420,INR
+2026-07-27,BIG-0340,Vistara Flight Mumbai to Goa,9800,INR
+2026-07-27,BIG-0359,Ola Outstation Taxi,210,INR
+2026-07-28,BIG-0060,Zomato Team Order,3460,INR
+2026-07-28,BIG-0107,IndiGo Flight Delhi to Mumbai,9500,INR
+2026-07-28,BIG-0133,Taxi Airport Pickup,810,INR
+2026-07-28,BIG-0169,Breakfast Cafe,2910,INR
+2026-07-28,BIG-0173,Uber Airport Transfer,2260,INR
+2026-07-28,BIG-0187,Marriott Hotel Pune,12700,INR
+2026-07-28,BIG-0209,Uber Client Visit,2070,INR
+2026-07-28,BIG-0301,Air India Flight Mumbai to Delhi,7200,INR
+2026-07-28,BIG-0307,Zomato Team Order,1430,INR
+2026-07-28,BIG-0326,Office Stationery Purchase,4950,INR
+2026-07-28,BIG-0337,IndiGo Flight Pune to Delhi,14150,INR
+2026-07-28,BIG-0173,Uber Airport Transfer,2260,INR
+2026-07-29,BIG-0002,Courier Charges,5760,INR
+2026-07-29,BIG-0061,Taj Hotel Mumbai,20200,INR
+2026-07-29,BIG-0098,Ola Cab Office to Hotel,2600,INR
+2026-07-29,BIG-0127,Swiggy Late Night Food,1480,INR
+2026-07-29,BIG-0190,Laundry Service,730,INR
+2026-07-29,BIG-0196,Working Lunch Restaurant,2270,INR
+2026-07-29,BIG-0228,Uber Airport Transfer,2680,INR
+2026-07-29,BIG-0284,Air India Flight Chennai to Kolkata,10600,INR
+2026-07-30,BIG-0008,Swiggy Late Night Food,4120,INR
+2026-07-30,BIG-0025,Emirates Flight Delhi to Dubai,12400,INR
+2026-07-30,BIG-0033,IndiGo Flight Pune to Delhi,5350,INR
+2026-07-30,BIG-0041,Marriott Hotel Pune,17100,INR
+2026-07-30,BIG-0046,Zomato Team Order,1990,INR
+2026-07-30,BIG-0051,Office Stationery Purchase,4270,INR
+2026-07-30,BIG-0075,Vistara Flight Mumbai to Goa,9950,INR
+2026-07-30,BIG-0122,Client Dinner,1580,INR
+2026-07-30,BIG-0138,Client Dinner,2910,INR
+2026-07-30,BIG-0153,Cafe Coffee Day,4150,INR
+2026-07-30,BIG-0165,Uber Intercity Ride,1800,INR
+2026-07-30,BIG-0203,IndiGo Flight Delhi to Mumbai,4550,INR
+2026-07-30,BIG-0266,Coffee Meeting,2390,INR
+2026-07-30,BIG-0305,Zomato Team Order,1020,INR
+2026-07-30,BIG-0345,Hilton Hotel Chennai,11600,INR
+Missing,BIG-0370,Cafe Coffee Day,560,INR
+2026-07-31,BIG-0030,Metro Pass,1320,INR
+2026-07-31,BIG-0036,Taj Hotel Mumbai,16600,INR
+2026-07-31,BIG-0038,Bus Ticket Pune to Mumbai,1960,INR
+2026-07-31,BIG-0043,Cafe Coffee Day,1690,INR
+2026-07-31,BIG-0080,Printing and Binding,2620,INR
+2026-07-31,BIG-0103,Working Lunch Restaurant,3770,INR
+2026-07-31,BIG-0108,Metro Pass,1640,INR
+2026-07-31,BIG-0193,Hilton Hotel Kolkata,6600,INR
+2026-07-31,BIG-0200,Visa Application Fee,4940,INR
+2026-07-31,BIG-0227,Taxi Airport Pickup,2690,INR
+2026-07-31,BIG-0258,Client Dinner,3580,INR
+2026-07-31,BIG-0274,Breakfast Cafe,3720,INR
+2026-07-31,BIG-0309,Taxi Airport Pickup,2060,INR
+2026-07-31,BIG-0318,Zomato Team Order,3860,INR
+2026-07-31,BIG-0350,Airport Food Court,3760,INR
+2026-08-02,BIG-0390,Vistara Flight Mumbai to Delhi,7100,INR
+2026-08-05,BIG-0391,Client Dinner,2600,INR

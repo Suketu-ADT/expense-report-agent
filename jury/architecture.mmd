@@ -1,0 +1,73 @@
+flowchart TD
+    %% User and Entry Point
+    User([User / Corporate Traveler]) -->|Natural Language Prompt & CSV| API[FastAPI Application]
+    API -->|Initialize Blackboard State| State[(Pydantic Blackboard State)]
+
+    %% Orchestrator & Memory Recall
+    subgraph Unit_III_Memory [Unit III: Memory & Tool Interaction]
+        DB[(SQLite Persistent Storage)]
+        HistStore[(Report History Store)]
+        PrefStore[(User Preferences Store)]
+        DB --> HistStore
+        DB --> PrefStore
+    end
+
+    API --> Orchestrator[Orchestrator Agent]
+    Orchestrator <-->|Memory Recall: Check Prior Reports| HistStore
+    Orchestrator <-->|Read User Preferences| PrefStore
+    Orchestrator -->|Write Execution Plan| State
+
+    %% Specialist Processing Agents
+    subgraph Specialists [Specialist Pipeline Agents]
+        DataRet[Data Retrieval Agent]
+        ValAgent[Filter & Validation Agent]
+        CatAgent[Categorization Agent]
+        CalcAgent[Calculation Agent]
+    end
+
+    Orchestrator --> DataRet
+    DataRet -->|Raw Expenses| State
+    DataRet --> ValAgent
+    ValAgent -->|Filtered Expenses & Flags| State
+    ValAgent --> CatAgent
+    CatAgent -->|Categorized Expenses| State
+    CatAgent --> CalcAgent
+    CalcAgent -->|Subtotals & Confirmed Grand Total| State
+
+    %% Unit IV Multi-Agent Review and Recovery Loop
+    subgraph Unit_IV_Collaboration [Unit IV: Multi-Agent Collaboration & Review]
+        RevAgent[Expense Review Agent]
+        CorrAgent[Correction Agent]
+        MsgBus[Structured AgentMessage Bus]
+    end
+
+    CalcAgent --> RevAgent
+    RevAgent -->|Audit Totals, Duplicates, Fields| State
+
+    %% Conditional Review Routing
+    RevAgent -->|Status: Needs Correction & Retries < 3| MsgBus
+    MsgBus -->|Structured Correction Request| CorrAgent
+    CorrAgent -->|Recalculate & Fix Blackboard| State
+    CorrAgent -->|Correction Result Message| MsgBus
+    CorrAgent -->|Re-Review Pass| RevAgent
+
+    %% Escalation and Report Generation
+    RevAgent -->|Status: Passed OR Retries >= 3| RepAgent[Report Generation Agent]
+    RepAgent -->|Generate ReportLab PDF| PDFArtifact[/PDF Report Artifact/]
+    RepAgent --> MemPersist[Memory Persistence Agent]
+
+    %% Persistence to Long-Term Memory
+    MemPersist -->|Save Completed Summary & Findings| HistStore
+
+    %% Gated Email Dispatch and Human Approval
+    MemPersist --> CheckGate{Review Passed & Approved?}
+    CheckGate -->|Yes: Auto-Approved| EmailAgent[Email Dispatch Agent]
+    CheckGate -->|No: Needs Human Review| HumanGate[Human Approval Gate]
+    
+    HumanGate -->|Approved via UI / API| EmailAgent
+    HumanGate -->|Rejected| EndHalt([Halt: Dispatch Cancelled])
+    EmailAgent -->|Dispatch SMTP / Dev Simulation| Done([Report Delivered to Finance])
+
+    %% State Synchronization
+    State -.->|Real-Time Status Polling| Frontend[React Web Dashboard]
+    HistStore -.->|Query Saved Reports| Frontend

@@ -1,0 +1,22 @@
+date,expense_id,description,amount,currency
+2026-07-01,ALL-001,IndiGo Flight Delhi to Bengaluru,7850,INR
+2026-07-02,ALL-002,Taj Hotel Bengaluru - 3 nights,18600,INR
+2026-07-02,ALL-003,Uber Airport Transfer,540,INR
+2026-07-03,ALL-004,Starbucks Client Meeting,780,INR
+2026-07-03,ALL-005,Team Lunch Restaurant,2250,INR
+2026-07-04,ALL-006,Metro Pass,300,INR
+2026-07-05,ALL-007,Client Dinner,3400,INR
+2026-07-06,ALL-008,Ola Cab Office to Hotel,420,INR
+2026-07-07,ALL-009,Vistara Flight Bengaluru to Mumbai,6200,INR
+2026-07-08,ALL-010,Marriott Hotel Mumbai - 2 nights,14800,INR
+2026-07-09,ALL-011,Swiggy Late Night Food,640,INR
+2026-07-10,ALL-012,Air India Flight Mumbai to Delhi,5900,INR
+2026-07-11,ALL-013,Office Stationery Purchase,1250,INR
+2026-07-12,ALL-014,Zomato Team Order,1180,INR
+2026-07-13,ALL-015,Hilton Hotel Pune - 1 night,8700,INR
+2026-07-14,ALL-016,Emirates Flight Delhi to Dubai,32400,INR
+2026-07-06,ALL-008,Ola Cab Office to Hotel,420,INR
+2026-07-09,ALL-017,Swiggy Late Night Food,640,INR
+Missing,ALL-018,Cafe Coffee Day,560,INR
+2026-07-18,ALL-019,Uber Client Visit,missing,INR
+2026-07-19,ALL-020,Tokyo Metro Day Pass,1200,JPY

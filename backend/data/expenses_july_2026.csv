@@ -1,0 +1,11 @@
+date,expense_id,description,amount,currency
+2026-07-02,EXP-7001,IndiGo Flight Delhi to Mumbai,8450,INR
+2026-07-04,EXP-7002,Taj Hotel Mumbai - 2 nights,12000,INR
+Missing,EXP-7003,Cafe Coffee Day,650,INR
+2026-07-06,EXP-7004,Uber Airport Transfer,480,INR
+2026-07-06,EXP-7005,Uber Airport Transfer,480,INR
+2026-07-08,EXP-7006,Team Lunch Restaurant,1350,INR
+2026-07-09,EXP-7007,Metro Pass,200,INR
+2026-07-10,EXP-7008,Client Dinner,2100,INR
+2026-07-12,EXP-7009,Vistara Flight Mumbai to Pune,5200,INR
+2026-07-14,EXP-7010,Marriott Hotel Pune,9500,INR

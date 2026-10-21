@@ -1,0 +1,26 @@
+date,expense_id,description,amount,currency
+2026-07-01,TST-001,IndiGo Flight Delhi to Bengaluru,7850,INR
+2026-07-02,TST-002,Taj Hotel Bengaluru - 3 nights,18600,INR
+2026-07-02,TST-003,Uber Airport Transfer,540,INR
+2026-07-03,TST-004,Starbucks Client Meeting,780,INR
+2026-07-03,TST-005,Team Lunch Restaurant,2250,INR
+2026-07-04,TST-006,Metro Pass,300,INR
+2026-07-05,TST-007,Client Dinner,3400,INR
+2026-07-06,TST-008,Ola Cab Office to Hotel,420,INR
+2026-07-07,TST-009,Vistara Flight Bengaluru to Mumbai,6200,INR
+2026-07-08,TST-010,Marriott Hotel Mumbai - 2 nights,14800,INR
+2026-07-09,TST-011,Swiggy Late Night Food,640,INR
+2026-07-10,TST-012,Air India Flight Mumbai to Delhi,5900,INR
+2026-07-11,TST-013,Office Stationery Purchase,1250,INR
+2026-07-12,TST-014,Zomato Team Order,1180,INR
+2026-07-13,TST-015,Hilton Hotel Pune - 1 night,8700,INR
+2026-07-14,TST-016,Emirates Flight Delhi to Dubai,32400,INR
+2026-07-15,TST-017,Hyatt Hotel Dubai - 2 nights,410,USD
+2026-07-16,TST-018,Dubai Taxi Airport Transfer,38,EUR
+2026-07-17,TST-019,Hotel Breakfast Dubai,22,GBP
+2026-07-06,TST-020,Ola Cab Office to Hotel,420,INR
+2026-07-09,TST-021,Swiggy Late Night Food,640,INR
+Missing,TST-022,Cafe Coffee Day,560,INR
+2026-07-18,TST-023,Uber Client Visit,missing,INR
+2026-07-19,TST-024,Tokyo Metro Day Pass,1200,JPY
+2026-08-02,TST-025,IndiGo Flight Delhi to Goa,6400,INR
