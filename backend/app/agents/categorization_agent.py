@@ -11,7 +11,7 @@ def categorization_node(state: ExpenseReportState) -> ExpenseReportState:
     rules = {
         "Airfare": ["indigo", "air india", "emirates", "vistara", "airlines", "flight"],
         "Lodging": ["hotel", "taj", "marriott", "hyatt", "hilton"],
-        "Meals": ["restaurant", "cafe", "starbucks", "zomato", "swiggy", "coffee"],
+        "Meals": ["restaurant", "cafe", "starbucks", "zomato", "swiggy", "coffee", "dinner", "lunch", "food"],
         "Ground Transport": ["uber", "ola", "taxi", "metro", "bus"]
     }
     

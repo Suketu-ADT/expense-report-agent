@@ -10,7 +10,7 @@ def categorize_expense_with_llm(merchant: str, amount: float, category_hint: str
         return "Other / Uncategorized"
     
     llm = ChatGroq(
-        model="llama3-70b-8192",
+        model="openai/gpt-oss-20b",
         temperature=0.0,
         api_key=api_key
     )

@@ -1,5 +1,6 @@
 from app.state.blackboard import ExpenseReportState
 from app.services.email_service import send_email
+from app.services.email_template import build_expense_report_html
 import os
 
 def email_node(state: ExpenseReportState) -> ExpenseReportState:
@@ -23,7 +24,11 @@ def email_node(state: ExpenseReportState) -> ExpenseReportState:
         
     body += f"Number of items needing review: {needs_review}\n"
     
-    success = send_email(to_email, subject, body, state.report_file)
+    # Rich HTML version (matches the dashboard's Expense Reports section); the
+    # plain-text body above stays as the fallback for clients that cannot show HTML.
+    html_body = build_expense_report_html(state)
+
+    success = send_email(to_email, subject, body, state.report_file, html_body=html_body)
     
     if success:
         state.delivery_status = "delivered"

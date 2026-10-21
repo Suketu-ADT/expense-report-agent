@@ -4,6 +4,7 @@ from typing import Optional
 class RunRequest(BaseModel):
     request_text: str = "Generate my travel expense report for last month and email it to finance."
     user_id: str = "demo_user"
+    inject_discrepancy: bool = False  # Dev-only: inject a controlled test discrepancy
 
 class RunResponse(BaseModel):
     run_id: str

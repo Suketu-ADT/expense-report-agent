@@ -20,6 +20,15 @@ def calculation_node(state: ExpenseReportState) -> ExpenseReportState:
             confirmed_total += amount
             subtotals[exp.category] = subtotals.get(exp.category, Decimal('0.00')) + amount
             
+    # Unit IV Demo: controlled calculation discrepancy injection
+    if state.inject_discrepancy:
+        confirmed_total += Decimal('500.00')
+        state.run_log.append({
+            "agent": "Calculation",
+            "action": f"Unit IV Demo: injected controlled discrepancy (+₹500.00 phantom amount) into confirmed total: ₹{confirmed_total}",
+            "status": "WARNING"
+        })
+
     state.totals["confirmed_total"] = float(confirmed_total)
     for k, v in subtotals.items():
         state.totals[k] = float(v)
@@ -34,3 +43,4 @@ def calculation_node(state: ExpenseReportState) -> ExpenseReportState:
     })
     
     return state
+

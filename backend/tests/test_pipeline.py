@@ -29,10 +29,10 @@ def test_validation_logic():
     
     state = validation_node(state)
     
-    # 1 is valid, 3 is valid (but flagged), 5 is valid (but flagged)
-    # 2 is dropped from filtered (missing date entirely), 4 is dropped (duplicate), 6 is dropped (out of range)
-    assert len(state.filtered_expenses) == 3
-    assert {e.id for e in state.filtered_expenses} == {"1", "3", "5"}
+    # 1 is valid, 2 is preserved as flagged provisional (missing date), 3 is valid (but flagged), 5 is valid (but flagged)
+    # 4 is dropped (duplicate), 6 is dropped (out of range)
+    assert len(state.filtered_expenses) == 4
+    assert {e.id for e in state.filtered_expenses} == {"1", "2", "3", "5"}
     
     # Check flags
     assert len(state.missing_data_flags) == 4

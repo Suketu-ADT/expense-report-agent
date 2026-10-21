@@ -29,12 +29,12 @@ def get_expenses(user_id: str) -> List[Expense]:
                     pass
             
             expenses.append(Expense(
-                id=f"exp_{i}",
+                id=row.get('expense_id', f"exp_{i}"),
                 date=date_val,
-                merchant=row.get('merchant', ''),
+                merchant=row.get('merchant', '') or row.get('description', ''),
                 amount=amount_val,
-                currency=row.get('currency', ''),
-                category_hint=row.get('category_hint', ''),
+                currency=row.get('currency', 'INR'),
+                category_hint=row.get('category_hint', '') or row.get('description', ''),
                 receipt_reference=row.get('receipt_reference', '')
             ))
     

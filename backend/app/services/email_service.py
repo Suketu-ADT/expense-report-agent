@@ -4,7 +4,7 @@ from email.message import EmailMessage
 import time
 import shutil
 
-def send_email(to_email: str, subject: str, body: str, attachment_path: str = None) -> bool:
+def send_email(to_email: str, subject: str, body: str, attachment_path: str = None, html_body: str = None) -> bool:
     dev_mode = os.getenv("DEVELOPMENT_MODE", "true").lower() == "true"
     
     if dev_mode:
@@ -19,10 +19,15 @@ def send_email(to_email: str, subject: str, body: str, attachment_path: str = No
             f.write(f"To: {to_email}\n")
             f.write(f"Subject: {subject}\n\n")
             f.write(body)
+            if html_body:
+                f.write(f"\n\n[HTML version]: email_{timestamp}.html")
             if attachment_path:
                 f.write(f"\n[Attachment]: {os.path.basename(attachment_path)}")
                 # Copy attachment for simulation
                 shutil.copy2(attachment_path, os.path.join(out_dir, f"attached_{os.path.basename(attachment_path)}"))
+        if html_body:
+            with open(os.path.join(out_dir, f"email_{timestamp}.html"), "w", encoding="utf-8") as hf:
+                hf.write(html_body)
         return True
     
     # Real SMTP
@@ -37,6 +42,8 @@ def send_email(to_email: str, subject: str, body: str, attachment_path: str = No
     msg['From'] = from_email
     msg['To'] = to_email
     msg.set_content(body)
+    if html_body:
+        msg.add_alternative(html_body, subtype='html')
     
     if attachment_path and os.path.exists(attachment_path):
         with open(attachment_path, 'rb') as f:
