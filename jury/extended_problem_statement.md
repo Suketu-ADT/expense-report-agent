@@ -45,6 +45,34 @@ To address statelessness, the system was extended with a dual-tier memory archit
 - **User Preference Store (`UserPreferenceModel`):** Retains persistent user configurations (e.g., default currency, notification rules, category preferences).
 - **Proactive Memory Recall:** At execution start, the `Orchestrator` queries persistent memory for existing reports matching the requested billing period, informing subsequent planning decisions.
 
+### C0. Report Cache (Write-Through, In Front of SQLite)
+
+Report history is read far more often than it's written: every run's
+Orchestrator recalls prior reports for the period, the Period Comparison
+stage looks up the previous period's total, and the dashboard polls
+`/api/reports/history` repeatedly while a run is live — each of those was
+previously a fresh SQLite query every time.
+
+`memory_service.py` now keeps three in-memory caches (by `report_id`, by
+`(period_label, user_id)`, and by `user_id` for the full list) in front of
+the database, following the same plain-module-dict pattern `main.active_runs`
+already uses for live run state rather than adding a new caching
+dependency. Every write — `save_report_summary`, and the two places that
+update a report directly via SQLAlchemy (`approve_run`'s delivery-status
+flip, and the PDF-regeneration path's `report_file_path` update) — refreshes
+the cache immediately, so **a cached read is never stale**. Each getter
+also returns a shallow copy rather than the cached object itself, since one
+caller (`GET /api/reports/{id}`) mutates what it gets back by adding a
+`reimbursement` key — without the copy, that mutation would have leaked
+into the cache and corrupted every later reader.
+
+This was verified live: fetching a report, approving it (which flips
+`delivery_status` via the bypass path), and fetching it again correctly
+shows `pending` → `delivered` with no network/DB round trip needed for the
+read itself — plus the existing 82 backend tests and the 500-claim
+large-dataset regression, both re-run after this change and still
+reporting 100%.
+
 ### C. Tool Use: Retrieval-Augmented Policy Grounding
 
 The reimbursement engine previously justified every decision with one hardcoded string (`"Meal limit INR 800.00"`). It now treats the company travel policy (`data/policy/travel_policy.md`) as a tool it queries, via `app/services/policy_rag.py`:

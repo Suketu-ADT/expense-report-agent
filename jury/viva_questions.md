@@ -31,6 +31,14 @@ The receipt-matching debate (two LLM advocates argue for one of two candidate re
 
 ---
 
+### Q0d: You added a report cache. How do you know it never shows stale data?
+**Answer:**
+Every write path updates the cache immediately: `save_report_summary` (the normal path) and the two spots in `main.py` that update a report directly via SQLAlchemy — `approve_run`'s delivery-status flip and the PDF-regeneration path's `report_file_path` update — all call into the same cache-refresh logic right after the field changes, before or after commit (the ORM object's in-memory attributes already reflect the new value either way). Finding and fixing those two bypass writes was itself the main work here: an earlier pass only updated the cache from `save_report_summary` and missed them, which would have shown a report as "pending" forever after approval.
+
+The other correctness detail is that every getter returns a shallow copy, not the cached dict itself — `GET /api/reports/{id}` adds a `reimbursement` key to what it gets back, and without the copy that mutation would permanently leak into the cached object and corrupt every later reader. We verified both of these live (approve a report, re-fetch, see `delivered`; fetch twice, confirm the second call has no leaked key) and re-ran the full test suite and the 500-claim dataset regression, both still at 100%.
+
+---
+
 ### Q1: Why is memory required in an autonomous agent system?
 **Answer:**  
 Standard LLM or workflow executions are stateless: once a prompt finishes execution, all internal state is lost. In real-world enterprise applications, memory is necessary to:

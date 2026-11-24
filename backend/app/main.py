@@ -14,7 +14,7 @@ from app.graph.expense_graph import expense_graph
 from app.state.blackboard import ExpenseReportState
 from app.services.memory_service import (
     get_all_reports, get_report_by_id, get_reports_by_period,
-    get_agent_messages, get_user_preferences, save_user_preference
+    get_agent_messages, get_user_preferences, save_user_preference, refresh_cached_report
 )
 from app.models.policy import PolicyRun, ReceiptDocument
 from app.agents.evidence_review_agent import receipt_in_use
@@ -274,6 +274,7 @@ def persist_policy_review(db, state, saved):
     history = db.query(ReportHistoryModel).filter_by(report_id=state.report_id).first()
     if history:
         history.report_file_path = state.report_file
+        refresh_cached_report(history)
     saved.snapshot = state.model_dump_json()
     db.commit()
     return policy_view(state)
@@ -309,6 +310,7 @@ def approve_run(run_id: str, db: Session = Depends(get_db)):
         report_rec = db.query(ReportHistoryModel).filter_by(report_id=new_state.report_id).first()
         if report_rec:
             report_rec.delivery_status = new_state.delivery_status
+            refresh_cached_report(report_rec)
 
     db.commit()
     if new_state.delivery_status == "failed":

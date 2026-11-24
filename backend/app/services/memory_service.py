@@ -5,11 +5,54 @@ Implements Unit III long-term memory using SQLite via SQLAlchemy.
 import json
 import uuid
 from datetime import datetime
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
 from app.models.memory import ReportHistoryModel, AgentMessageModel, UserPreferenceModel
+
+
+# ── Report cache (write-through, in front of SQLite) ────────────────────
+# Report history is read far more often than it's written: every run's
+# Orchestrator recalls prior reports for the period (Unit II/III), the
+# Period Comparison stage looks up the previous period's total, and the
+# dashboard polls /api/reports/history repeatedly while a run is live.
+# Each of those was a fresh SQLite query; this cache keeps the three read
+# paths below in memory and updates them the moment a write happens, so a
+# cached read is never stale. It follows the same plain-module-dict
+# pattern `main.active_runs` already uses for live run state, rather than
+# introducing a new caching dependency for a dataset this size.
+_report_cache: Dict[str, Dict[str, Any]] = {}
+_period_cache: Dict[Tuple[str, Optional[str]], List[Dict[str, Any]]] = {}
+_all_reports_cache: Dict[Optional[str], List[Dict[str, Any]]] = {}
+
+
+def clear_report_cache() -> None:
+    """Drop every cached entry. Tests use this for isolation; production
+    code never needs to — every write already keeps the cache consistent."""
+    _report_cache.clear()
+    _period_cache.clear()
+    _all_reports_cache.clear()
+
+
+def refresh_cached_report(record: ReportHistoryModel) -> None:
+    """Re-sync the cache for a report that was just updated directly via
+    SQLAlchemy outside save_report_summary (e.g. a delivery-status flip on
+    approval, or a report_file_path set after a late PDF regeneration).
+    Call this right after such a direct write, before or after commit —
+    the in-memory attributes already reflect the new values either way."""
+    _cache_report(_report_to_dict(record))
+
+
+def _cache_report(report: Dict[str, Any]) -> None:
+    _report_cache[report["report_id"]] = report
+    # The period/user-id list caches can no longer be trusted once a
+    # report in that period (or for that user) changes — including the
+    # None-keyed "all periods" / "all users" entries other callers use.
+    _period_cache.pop((report["period_label"], report["user_id"]), None)
+    _period_cache.pop((report["period_label"], None), None)
+    _all_reports_cache.pop(report["user_id"], None)
+    _all_reports_cache.pop(None, None)
 
 
 # ── Report History (Long-Term Memory) ──────────────────────────────────
@@ -62,6 +105,7 @@ def save_report_summary(
             existing.delivery_status = delivery_status
             existing.updated_at = datetime.utcnow()
             db.commit()
+            _cache_report(_report_to_dict(existing))
             return existing.report_id
 
         report_id = f"RPT-{uuid.uuid4().hex[:8].upper()}"
@@ -86,6 +130,7 @@ def save_report_summary(
         db.add(record)
         db.commit()
         db.refresh(record)
+        _cache_report(_report_to_dict(record))
         return report_id
     except Exception as e:
         db.rollback()
@@ -97,6 +142,12 @@ def save_report_summary(
 
 def get_report_by_id(report_id: str, db: Optional[Session] = None) -> Optional[Dict[str, Any]]:
     """Retrieve a previously saved report by its report_id."""
+    # A shallow copy every time: callers (e.g. the /api/reports/{id} route,
+    # which adds a "reimbursement" key to what this returns) must never be
+    # able to mutate the cached dict itself.
+    if report_id in _report_cache:
+        return dict(_report_cache[report_id])
+
     close_db = False
     if db is None:
         db = SessionLocal()
@@ -108,7 +159,9 @@ def get_report_by_id(report_id: str, db: Optional[Session] = None) -> Optional[D
         ).first()
         if record is None:
             return None
-        return _report_to_dict(record)
+        report = _report_to_dict(record)
+        _report_cache[report_id] = report
+        return dict(report)
     finally:
         if close_db:
             db.close()
@@ -116,6 +169,10 @@ def get_report_by_id(report_id: str, db: Optional[Session] = None) -> Optional[D
 
 def get_reports_by_period(period_label: str, user_id: Optional[str] = None, db: Optional[Session] = None) -> List[Dict[str, Any]]:
     """Retrieve reports matching a reporting period label."""
+    cache_key = (period_label, user_id)
+    if cache_key in _period_cache:
+        return [dict(r) for r in _period_cache[cache_key]]
+
     close_db = False
     if db is None:
         db = SessionLocal()
@@ -128,7 +185,9 @@ def get_reports_by_period(period_label: str, user_id: Optional[str] = None, db: 
         if user_id:
             query = query.filter(ReportHistoryModel.user_id == user_id)
         records = query.order_by(ReportHistoryModel.created_at.desc()).all()
-        return [_report_to_dict(r) for r in records]
+        reports = [_report_to_dict(r) for r in records]
+        _period_cache[cache_key] = reports
+        return [dict(r) for r in reports]
     finally:
         if close_db:
             db.close()
@@ -136,6 +195,9 @@ def get_reports_by_period(period_label: str, user_id: Optional[str] = None, db: 
 
 def get_all_reports(user_id: Optional[str] = None, db: Optional[Session] = None) -> List[Dict[str, Any]]:
     """Retrieve all report summaries, optionally filtered by user_id."""
+    if user_id in _all_reports_cache:
+        return [dict(r) for r in _all_reports_cache[user_id]]
+
     close_db = False
     if db is None:
         db = SessionLocal()
@@ -146,7 +208,9 @@ def get_all_reports(user_id: Optional[str] = None, db: Optional[Session] = None)
         if user_id:
             query = query.filter(ReportHistoryModel.user_id == user_id)
         records = query.order_by(ReportHistoryModel.created_at.desc()).all()
-        return [_report_to_dict(r) for r in records]
+        reports = [_report_to_dict(r) for r in records]
+        _all_reports_cache[user_id] = reports
+        return [dict(r) for r in reports]
     finally:
         if close_db:
             db.close()
