@@ -5,8 +5,7 @@ import Card from './ui/Card';
 import EmptyState from './ui/EmptyState';
 import { getRunCurrency, formatRunMoney } from '../utils/format';
 
-// Restrained categorical palette: indigo accent first, then muted, distinguishable hues.
-const COLORS = ['#635BFF', '#16845B', '#B7791F', '#C43D4B', '#0E7490', '#8B5CF6', '#64748B', '#BE185D'];
+const COLORS = ['#2C624A', '#788CB0', '#C58B4C', '#A75B59', '#5A9A99', '#8D749A', '#657584', '#B87C93'];
 
 export default function CategoryChart({ data, isRunning }) {
   const totals = data?.totals || {};

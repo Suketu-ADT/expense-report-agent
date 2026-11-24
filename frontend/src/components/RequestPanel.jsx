@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { Play, Upload, Bug, FileSpreadsheet, Loader2, CheckCircle2, XCircle, ChevronDown } from 'lucide-react';
+import { Play, Upload, Bug, FileSpreadsheet, Loader2, CheckCircle2, XCircle, ChevronDown, ShieldCheck } from 'lucide-react';
 import Card from './ui/Card';
 import Badge from './ui/Badge';
+
+const AUTONOMY_LEVELS = [
+  { value: 'cautious', label: 'Cautious', hint: '0 auto-retries — any finding, even a warning, goes to a human.' },
+  { value: 'co_pilot', label: 'Co-pilot', hint: 'Default — up to 3 auto-correction retries before escalating.' },
+  { value: 'trusting', label: 'Trusting', hint: 'Up to 5 auto-correction retries before escalating.' },
+];
 
 /**
  * Report request form. All state and handlers are owned by App and passed in;
@@ -17,8 +23,14 @@ export default function RequestPanel({
   onFileInputChange,
   onDropFile,
   uploadState,
+  policyEnabled,
+  onPolicyChange,
+  mealCap,
+  onMealCapChange,
   injectDiscrepancy,
   onInjectDiscrepancyChange,
+  autonomyLevel,
+  onAutonomyLevelChange,
 }) {
   const [dragging, setDragging] = useState(false);
   const busy = isRunning || isUploading;
@@ -34,9 +46,7 @@ export default function RequestPanel({
   return (
     <Card
       id="request"
-      title="Report request"
-      description="Describe the report you need. The agents will retrieve, validate, categorise and review the expenses."
-      icon={Play}
+      title="New report"
       className="request-card"
     >
       <div className="request-grid">
@@ -89,7 +99,7 @@ export default function RequestPanel({
               ) : uploadState?.status === 'success' ? (
                 <>
                   <span className="dropzone-title">{uploadState.name}</span>
-                  <span className="dropzone-sub">Uploaded — ready to run. Click to replace.</span>
+                  <span className="dropzone-sub">Uploaded. Click to replace.</span>
                 </>
               ) : uploadState?.status === 'error' ? (
                 <>
@@ -98,8 +108,8 @@ export default function RequestPanel({
                 </>
               ) : (
                 <>
-                  <span className="dropzone-title">Drop a CSV here or <u>browse</u></span>
-                  <span className="dropzone-sub">Replaces the expense data used by the next run.</span>
+                  <span className="dropzone-title">Upload CSV</span>
+                  <span className="dropzone-sub">Choose a file or drop it here</span>
                 </>
               )}
             </span>
@@ -108,11 +118,33 @@ export default function RequestPanel({
         </div>
       </div>
 
+      <div className="policy-setup">
+        <label className="policy-toggle">
+          <input type="checkbox" className="checkbox" checked={policyEnabled}
+            onChange={event => onPolicyChange(event.target.checked)} disabled={busy} />
+          <span>
+            <strong>Apply reimbursement policy</strong>
+            <small>Match receipts and calculate eligible amounts.</small>
+          </span>
+        </label>
+        {policyEnabled && <label className="meal-limit">
+          Meal limit (INR)
+          <input type="number" min="1" max="1000000" step="1" value={mealCap}
+            onChange={event => onMealCapChange(event.target.value)} disabled={busy} />
+        </label>}
+      </div>
+
+      <div className="request-footer">
       <details className="advanced">
         <summary className="advanced-summary">
           <ChevronDown size={14} className="advanced-chevron" aria-hidden="true" />
-          <span>Advanced · demonstration settings</span>
-          {injectDiscrepancy && <Badge tone="warning" icon={Bug}>Discrepancy injection on</Badge>}
+          <span>Advanced</span>
+          {injectDiscrepancy && <Badge tone="warning" icon={Bug}>Discrepancy on</Badge>}
+          {autonomyLevel !== 'co_pilot' && (
+            <Badge tone={autonomyLevel === 'cautious' ? 'neutral' : 'warning'} icon={ShieldCheck}>
+              {AUTONOMY_LEVELS.find((l) => l.value === autonomyLevel)?.label}
+            </Badge>
+          )}
         </summary>
         <label className="check-row">
           <input
@@ -123,12 +155,32 @@ export default function RequestPanel({
             disabled={isRunning}
           />
           <span className="check-text">
-            <span className="check-title"><Bug size={13} aria-hidden="true" /> Unit IV demo: inject calculation discrepancy</span>
+            <span className="check-title"><Bug size={13} aria-hidden="true" /> Inject a calculation discrepancy</span>
             <span className="check-sub">
-              Test feature. Adds a deliberate error to the confirmed total so you can watch the Review Agent detect it and trigger the correction loop. Leave off for normal reports.
+              Adds a deliberate error to test the review and correction loop.
             </span>
           </span>
         </label>
+        <div className="field">
+          <label className="field-label" htmlFor="autonomy-level">
+            <ShieldCheck size={13} aria-hidden="true" /> Autonomy level
+          </label>
+          <select
+            id="autonomy-level"
+            className="select"
+            value={autonomyLevel}
+            onChange={(e) => onAutonomyLevelChange(e.target.value)}
+            disabled={isRunning}
+          >
+            {AUTONOMY_LEVELS.map((level) => (
+              <option key={level.value} value={level.value}>{level.label}</option>
+            ))}
+          </select>
+          <small className="check-sub">
+            {AUTONOMY_LEVELS.find((l) => l.value === autonomyLevel)?.hint}
+            {' '}Email dispatch always needs your explicit approval regardless of level.
+          </small>
+        </div>
       </details>
 
       <div className="request-actions">
@@ -139,8 +191,9 @@ export default function RequestPanel({
           disabled={busy}
         >
           {isRunning ? <Loader2 size={16} className="spin" aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
-          {isRunning ? 'Running agents…' : 'Run Agent'}
+          {isRunning ? 'Running…' : 'Generate report'}
         </button>
+      </div>
       </div>
     </Card>
   );

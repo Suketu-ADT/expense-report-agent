@@ -1,0 +1,9 @@
+case,category,claimed_inr,receipt_inr,initial_status,initial_approved_paise,review_action,final_status,final_approved_paise
+compliant fare,Ground Transport,350,350,eligible,35000,,eligible,35000
+meal at cap,Meals,800,800,eligible,80000,,eligible,80000
+meal above cap,Meals,1200,1200,eligible,80000,,eligible,80000
+fare discrepancy,Ground Transport,350,300,held,0,accept,accepted,30000
+receipt exceeds claim,Ground Transport,275.50,300,held,0,accept,accepted,27550
+cap and mismatch,Meals,1200,950,held,0,accept,accepted,80000
+reviewer rejects discrepancy,Meals,625,450,held,0,reject,rejected,0
+missing receipt,Meals,600,,held,0,,held,0

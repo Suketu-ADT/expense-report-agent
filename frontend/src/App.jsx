@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { api } from './services/api';
-import { Play, Loader2 } from 'lucide-react';
+import { ArrowRight, FileCheck2, Receipt } from 'lucide-react';
+import PolicyReview from './components/PolicyReview';
 import AgentPipeline from './components/AgentPipeline';
 import SummaryCards from './components/SummaryCards';
 import ExpenseTable from './components/ExpenseTable';
@@ -16,10 +17,21 @@ import RequestPanel from './components/RequestPanel';
 import RunOutcome from './components/RunOutcome';
 import ApprovalGate from './components/ApprovalGate';
 import MemoryPanel from './components/MemoryPanel';
-import './index.css';
+import { formatMonthYear } from './utils/format';
 import './styles/features.css';
+import './styles/workspace.css';
 
 const SIDEBAR_KEY = 'expenseflow.sidebar.collapsed';
+
+const DEMOS = [
+  { mode: 'receipt-agents', label: 'Receipt agent demo', detail: 'Find a missing receipt and review a taxi fare discrepancy.', icon: Receipt },
+  { mode: true, label: 'Two-claim jury demo', detail: 'Compare submitted expenses with the reimbursable amounts.', icon: FileCheck2 },
+];
+
+function readSection() {
+  const id = window.location.hash.slice(1);
+  return NAV_ITEMS.some(item => item.id === id) ? id : 'overview';
+}
 
 function readCollapsed() {
   try {
@@ -30,12 +42,15 @@ function readCollapsed() {
 }
 
 function App() {
+  const [policyEnabled, setPolicyEnabled] = useState(false);
+  const [mealCap, setMealCap] = useState('800');
   const [requestText, setRequestText] = useState("Generate my travel expense report for July 2026 and email it to finance.");
   const [runId, setRunId] = useState(null);
   const [status, setStatus] = useState("idle");
   const [runData, setRunData] = useState(null);
   const [logs, setLogs] = useState([]);
   const [injectDiscrepancy, setInjectDiscrepancy] = useState(false);
+  const [autonomyLevel, setAutonomyLevel] = useState('co_pilot');
   const [approvalLoading, setApprovalLoading] = useState(false);
   const [approvalMessage, setApprovalMessage] = useState(null);
   const fileInputRef = useRef(null);
@@ -47,7 +62,7 @@ function App() {
   const [startError, setStartError] = useState(null);
   const [pollError, setPollError] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [activeSection, setActiveSection] = useState('overview');
+  const [activeSection, setActiveSection] = useState(readSection);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(readCollapsed);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -77,7 +92,14 @@ function App() {
     return () => clearInterval(interval);
   }, [runId, status]);
 
-  const handleRun = async () => {
+  const handleRun = async (demo = false) => {
+    const resolutionDemo = demo === 'receipt-agents';
+    const isDemo = demo === true || resolutionDemo;
+    const cap = isDemo ? 800 : Number(mealCap);
+    if (policyEnabled && (!Number.isInteger(cap) || cap <= 0 || cap > 1000000)) {
+      setStartError('Enter a whole-rupee meal limit between 1 and 1,000,000.');
+      return;
+    }
     try {
       setStatus("running");
       setRunData(null);
@@ -85,7 +107,17 @@ function App() {
       setApprovalMessage(null);
       setStartError(null);
       setPollError(false);
-      const response = await api.startRun(requestText, injectDiscrepancy);
+      const policy = isDemo || policyEnabled ? {
+        meal_cap: cap,
+        demo: demo === true,
+        resolution_demo: resolutionDemo,
+      } : null;
+      const response = await api.startRun(
+        isDemo ? 'Generate July 2026 expense report' : requestText,
+        !isDemo && injectDiscrepancy,
+        policy,
+        autonomyLevel,
+      );
       setRunId(response.run_id);
     } catch (error) {
       console.error("Failed to start run:", error);
@@ -184,42 +216,28 @@ function App() {
 
   // ── Navigation ────────────────────────────────────────────────────────
   const navigateTo = useCallback((id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    if (readSection() === id) {
+      window.scrollTo(0, 0);
+      document.getElementById('main')?.focus({ preventScroll: true });
+    } else {
+      window.history.pushState(null, '', '#' + id);
+    }
     setActiveSection(id);
     setMobileNavOpen(false);
   }, []);
 
-  // Scroll-spy: the active item is the last section whose top has passed the header.
+  const previousSection = useRef(activeSection);
+  useLayoutEffect(() => {
+    if (previousSection.current === activeSection) return;
+    previousSection.current = activeSection;
+    window.scrollTo(0, 0);
+    document.getElementById('main')?.focus({ preventScroll: true });
+  }, [activeSection]);
+
   useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-      let current = NAV_ITEMS[0].id;
-      if (atBottom) {
-        current = NAV_ITEMS[NAV_ITEMS.length - 1].id;
-      } else {
-        for (const item of NAV_ITEMS) {
-          const el = document.getElementById(item.id);
-          if (el && el.getBoundingClientRect().top <= 120) current = item.id;
-        }
-      }
-      setActiveSection(current);
-    };
-    const onScroll = () => {
-      if (!frame) frame = window.requestAnimationFrame(update);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
+    const syncSection = () => setActiveSection(readSection());
+    window.addEventListener('hashchange', syncSection);
+    return () => window.removeEventListener('hashchange', syncSection);
   }, []);
 
   useEffect(() => {
@@ -245,7 +263,7 @@ function App() {
   const isRunning = status === 'running';
   const awaitingApproval = status === 'completed' && runData && runData.delivery_status !== 'delivered'
     && runData.approval_status !== 'rejected';
-  let runStatus = { label: 'Idle', detail: 'No run in progress', tone: 'neutral' };
+  let runStatus = { label: 'Ready', tone: 'neutral' };
   if (pollError) runStatus = { label: 'Connection issue', detail: isRunning ? 'Connection issue — retrying' : 'Connection issue', tone: 'warning' };
   else if (isRunning) runStatus = { label: 'Running', detail: runData?.current_agent ? `Running · ${runData.current_agent}` : 'Running', tone: 'info' };
   else if (status === 'failed') runStatus = { label: 'Failed', detail: 'Last run failed', tone: 'error' };
@@ -254,9 +272,25 @@ function App() {
 
   const sectionLabel = NAV_ITEMS.find((n) => n.id === activeSection)?.label || 'Overview';
 
+  const reportPeriod = formatMonthYear(runData?.date_range?.start_date);
+  const hasPolicyReview = status === 'completed' && Boolean(runData?.reimbursement);
+
+  const resumeReport = async (id) => {
+    const data = await api.getRunStatus(id);
+    setRunId(id);
+    setRunData(data);
+    setStatus(data.status);
+    setApprovalMessage(null);
+    setLogs(await api.getRunLogs(id));
+    navigateTo('review');
+  };
+
   return (
     <div className={`app-shell ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-      <a className="skip-link" href="#main">Skip to content</a>
+      <a className="skip-link" href="#main" onClick={event => {
+        event.preventDefault();
+        document.getElementById('main')?.focus();
+      }}>Skip to content</a>
 
       <Sidebar
         activeSection={activeSection}
@@ -265,53 +299,63 @@ function App() {
         onToggleCollapsed={toggleCollapsed}
         mobileOpen={mobileNavOpen}
         onMobileClose={() => setMobileNavOpen(false)}
-        runStatus={runStatus}
       />
 
       <div className="main-content">
         <TopBar
           sectionLabel={sectionLabel}
           runStatus={runStatus}
+          mobileNavOpen={mobileNavOpen}
           onOpenNav={() => setMobileNavOpen(true)}
           onRefresh={handleRefresh}
           isRefreshing={isRefreshing}
         />
 
-        <main id="main" className="dashboard-container">
+        <main id="main" className="dashboard-container" tabIndex={-1}>
 
           {/* Overview: request, run status, headline figures */}
-          <section id="overview" className="page-section" aria-label="Overview">
-            <div className="page-header">
-              <div>
-                <h1 className="page-title">Expense Intelligence</h1>
-                <p className="page-subtitle">
-                  Automate expense reporting, validate transactions, and review AI-generated financial summaries.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleRun}
-                disabled={isRunning || isUploading}
-              >
-                {isRunning ? <Loader2 size={16} className="spin" aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
-                {isRunning ? 'Running…' : 'Generate Report'}
-              </button>
-            </div>
+          <section id="overview" className="page-section" aria-label="Overview" hidden={activeSection !== 'overview'}>
+            <header className="page-header">
+              <h1 className="page-title">Expense workspace</h1>
+              <p className="page-subtitle">Import expenses, match receipts, and review what’s ready to reimburse.</p>
+            </header>
 
-            <RequestPanel
-              requestText={requestText}
-              onRequestTextChange={setRequestText}
-              onRun={handleRun}
-              isRunning={isRunning}
-              isUploading={isUploading}
-              fileInputRef={fileInputRef}
-              onFileInputChange={handleFileUpload}
-              onDropFile={uploadFile}
-              uploadState={uploadState}
-              injectDiscrepancy={injectDiscrepancy}
-              onInjectDiscrepancyChange={setInjectDiscrepancy}
-            />
+            <div className="overview-grid">
+              <RequestPanel
+                requestText={requestText}
+                onRequestTextChange={setRequestText}
+                onRun={() => handleRun()}
+                isRunning={isRunning}
+                isUploading={isUploading}
+                fileInputRef={fileInputRef}
+                onFileInputChange={handleFileUpload}
+                onDropFile={uploadFile}
+                uploadState={uploadState}
+                policyEnabled={policyEnabled}
+                onPolicyChange={setPolicyEnabled}
+                mealCap={mealCap}
+                onMealCapChange={setMealCap}
+                injectDiscrepancy={injectDiscrepancy}
+                onInjectDiscrepancyChange={setInjectDiscrepancy}
+                autonomyLevel={autonomyLevel}
+                onAutonomyLevelChange={setAutonomyLevel}
+              />
+
+              <aside className="demo-card" aria-labelledby="demo-title">
+                <h2 id="demo-title">Try a sample</h2>
+                <p>Run a July 2026 report with sample expenses and receipts.</p>
+                <div className="demo-list">
+                  {DEMOS.map(({ mode, label, detail, icon: Icon }) => (
+                    <button key={label} type="button" className="demo-option"
+                      disabled={isRunning || isUploading} onClick={() => handleRun(mode)}>
+                      <span className="demo-icon"><Icon size={19} aria-hidden="true" /></span>
+                      <span className="demo-copy"><strong>{label}</strong><span>{detail}</span></span>
+                      <ArrowRight size={17} className="demo-arrow" aria-hidden="true" />
+                    </button>
+                  ))}
+                </div>
+              </aside>
+            </div>
 
             <RunOutcome
               status={status}
@@ -321,32 +365,45 @@ function App() {
               onNavigate={navigateTo}
             />
 
-            <SummaryCards data={runData} isRunning={isRunning} />
+            {(runData || isRunning) && <section className="current-report" aria-labelledby="current-report-title">
+              <div className="current-report-header">
+                <h2 id="current-report-title">{reportPeriod ? reportPeriod + ' summary' : 'Current report'}</h2>
+                {hasPolicyReview && <button type="button" className="btn btn-secondary" onClick={() => navigateTo('review')}>
+                  Review claim decisions <ArrowRight size={16} aria-hidden="true" />
+                </button>}
+              </div>
+              <SummaryCards data={runData} isRunning={isRunning} />
+            </section>}
+            {activeSection === 'overview' && <ReportHistory key={historyKey} limit={3} onViewAll={() => navigateTo('history')}
+              onResume={resumeReport} disabled={isRunning} />}
           </section>
 
           {/* Expense Reports: itemised expenses and category breakdown */}
-          <section id="reports" className="page-section" aria-label="Expense reports">
-            <h2 className="section-title">Expense Reports</h2>
+          <section id="reports" className="page-section" aria-label="Expense reports" hidden={activeSection !== 'reports'}>
+            <h1 className="page-title">Expense reports</h1>
             <div className="grid-main-side">
               <ExpenseTable data={runData} isRunning={isRunning} />
-              <CategoryChart data={runData} isRunning={isRunning} />
+              {activeSection === 'reports' && <CategoryChart data={runData} isRunning={isRunning} />}
             </div>
           </section>
 
           {/* Agent Pipeline: stages and run log */}
-          <section id="pipeline" className="page-section" aria-label="Agent pipeline">
-            <h2 className="section-title">Agent Pipeline</h2>
+          <section id="pipeline" className="page-section" aria-label="Agent pipeline" hidden={activeSection !== 'pipeline'}>
+            <h1 className="page-title">Agent pipeline</h1>
             <AgentPipeline data={runData} logs={logs} isRunning={isRunning} />
             <RunLog logs={logs} isRunning={isRunning} />
           </section>
 
           {/* Review & Approvals: Unit IV review, data quality, human approval gate */}
-          <section id="review" className="page-section" aria-label="Review and approvals">
-            <h2 className="section-title">Review &amp; Approvals</h2>
+          <section id="review" className="page-section" aria-label="Review and approvals" hidden={activeSection !== 'review'}>
+            <h1 className="page-title">Review &amp; approvals</h1>
+            {status === 'completed' && <PolicyReview key={runId} data={runData?.reimbursement} runId={runId}
+              closed={runData?.delivery_status === 'delivered' || runData?.approval_status === 'rejected'}
+                onChange={sheet => setRunData(prev => prev?.run_id === runId && sheet.revision >= prev.reimbursement?.revision
+                  ? {...prev, reimbursement: sheet} : prev)}/>}
             <ApprovalGate
               data={runData}
               runStatus={status}
-              logs={logs}
               approvalLoading={approvalLoading}
               approvalMessage={approvalMessage}
               onApprove={handleApprove}
@@ -359,14 +416,14 @@ function App() {
           </section>
 
           {/* Unit III: persistent report history */}
-          <section id="history" className="page-section" aria-label="Report history">
-            <h2 className="section-title">Report History</h2>
-            <ReportHistory key={historyKey} />
+          <section id="history" className="page-section" aria-label="Report history" hidden={activeSection !== 'history'}>
+            <h1 className="page-title">Report history</h1>
+            {activeSection === 'history' && <ReportHistory key={historyKey} onResume={resumeReport} disabled={isRunning} />}
           </section>
 
           {/* Unit III: memory recall for the current run */}
-          <section id="memory" className="page-section" aria-label="Memory and insights">
-            <h2 className="section-title">Memory &amp; Insights</h2>
+          <section id="memory" className="page-section" aria-label="Memory and insights" hidden={activeSection !== 'memory'}>
+            <h1 className="page-title">Report memory</h1>
             <MemoryPanel data={runData} isRunning={isRunning} />
           </section>
 

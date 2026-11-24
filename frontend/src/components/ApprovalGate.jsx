@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, XCircle, Loader2, Lock, Send } from 'lucide-react';
+import { XCircle, Loader2, Lock, Send } from 'lucide-react';
 import Card from './ui/Card';
 import Badge from './ui/Badge';
 import Notice from './ui/Notice';
@@ -19,7 +19,6 @@ const APPROVAL_TONE = { pending: 'warning', approved: 'success', rejected: 'erro
 export default function ApprovalGate({
   data,
   runStatus,
-  logs,
   approvalLoading,
   approvalMessage,
   onApprove,
@@ -32,8 +31,7 @@ export default function ApprovalGate({
 
   const header = {
     id: 'approval',
-    title: 'Human approval gate',
-    description: 'A reviewer must approve before the report email is sent.',
+    title: 'Email approval',
     icon: Lock,
   };
 
@@ -61,11 +59,11 @@ export default function ApprovalGate({
 
   const approval = data.approval_status || 'pending';
   const delivered = data.delivery_status === 'delivered';
-
-  // Real, backend-provided explanation of why dispatch is held, if one was logged.
-  const heldNote = [...(logs || [])]
-    .reverse()
-    .find((l) => l.agent === 'System' && /^email (held|cancelled)/i.test(l.action || ''));
+  const failedDelivery = data.delivery_status === 'failed';
+  const held = data.reimbursement?.held || 0;
+  const approvalBlocked = approvalLoading || held > 0
+    || (data.reimbursement && approval === 'rejected') || (approval === 'approved' && !failedDelivery);
+  const needsAttention = held > 0 || data.needs_human_review;
 
   const click = (kind, fn) => () => {
     setActing(kind);
@@ -76,36 +74,34 @@ export default function ApprovalGate({
     <Card
       {...header}
       className={`approval approval-${approval}`}
-      actions={<Badge tone={APPROVAL_TONE[approval] || 'neutral'} dot>Approval {humanize(approval)}</Badge>}
+      actions={!delivered && <Badge tone={APPROVAL_TONE[approval] || 'neutral'} dot>{humanize(approval)}</Badge>}
     >
-      <div className="approval-reason">
-        <div className="approval-reason-title">Why approval is required</div>
-        <p>
-          {data.needs_human_review
-            ? 'The Expense Review agent escalated this report for human review before it can be sent.'
-            : 'Email dispatch is held behind an explicit approval gate. Nothing is sent until you approve.'}
-        </p>
-        {heldNote && <p className="approval-note">Backend note: {heldNote.action}</p>}
-      </div>
-
       {delivered ? (
-        <Notice tone="success" title="Email delivered">
-          This report has already been dispatched, so no further approval is needed.
+        <Notice tone="success" title="Email delivered" />
+      ) : held > 0 ? (
+        <Notice tone="warning" title={held === 1 ? '1 claim on hold' : held + ' claims on hold'}>
+          Resolve the held claims before sending the report.
         </Notice>
-      ) : (
+      ) : needsAttention ? (
+        <Notice tone="warning" title="Review required">Check the expense review findings before approving.</Notice>
+      ) : approval !== 'rejected' && !failedDelivery ? (
+        <p className="approval-instruction">Approve this report to send it to finance.</p>
+      ) : null}
+
+      {!delivered && (
         <div className="approval-actions">
           <button
             type="button"
             className="btn btn-success btn-lg"
             onClick={click('approve', onApprove)}
-            disabled={approvalLoading || approval === 'approved'}
+            disabled={approvalBlocked}
           >
             {activeAction === 'approve'
               ? <Loader2 size={16} className="spin" aria-hidden="true" />
-              : approval === 'approved' ? <CheckCircle2 size={16} aria-hidden="true" /> : <Send size={16} aria-hidden="true" />}
+              : <Send size={16} aria-hidden="true" />}
             {activeAction === 'approve'
               ? 'Dispatching…'
-              : approval === 'approved' ? 'Approved & Dispatched' : 'Approve & Dispatch Email'}
+              : failedDelivery ? 'Retry email delivery' : 'Approve and send'}
           </button>
           <button
             type="button"
@@ -121,7 +117,7 @@ export default function ApprovalGate({
         </div>
       )}
 
-      {approvalMessage && (
+      {approvalMessage && !delivered && (
         <Notice tone={approvalMessage.type} className="approval-feedback">
           {approvalMessage.text}
         </Notice>

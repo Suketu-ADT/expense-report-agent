@@ -6,7 +6,12 @@ def report_node(state: ExpenseReportState) -> ExpenseReportState:
     state.agent_status["Report Generation"] = "RUNNING"
     
     try:
-        report_path = generate_pdf_report(state, run_id=state.user_id) # Using user_id for simplicity or pass real run_id
+        if state.meal_cap is not None:
+            from app.services.reimbursement import create_sheet, PolicyOptions
+            options = PolicyOptions(meal_cap=state.meal_cap, demo=state.policy_demo,
+                                    resolution_demo=state.resolution_demo)
+            state.reimbursement = create_sheet(state, options)
+        report_path = generate_pdf_report(state, run_id=state.run_id or state.user_id) # Using user_id for simplicity or pass real run_id
         state.report_file = report_path
         
         state.agent_status["Report Generation"] = "COMPLETED"

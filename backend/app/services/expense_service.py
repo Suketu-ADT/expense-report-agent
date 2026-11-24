@@ -4,9 +4,14 @@ from app.state.blackboard import Expense
 from datetime import datetime
 import os
 
+EXPENSES_CSV = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'expenses.csv')
+
 def get_expenses(user_id: str) -> List[Expense]:
+    return read_expenses_csv(EXPENSES_CSV)
+
+
+def read_expenses_csv(csv_path) -> List[Expense]:
     expenses = []
-    csv_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'expenses.csv')
     
     if not os.path.exists(csv_path):
         return expenses

@@ -3,6 +3,9 @@ from datetime import date, timedelta
 import calendar
 from app.state.blackboard import ExpenseReportState, DateRange
 from app.services.memory_service import get_reports_by_period, get_user_preferences
+from app.services.planner_service import parse_intent
+
+AUTONOMY_RETRY_LIMITS = {"cautious": 0, "co_pilot": 3, "trusting": 5}
 
 MONTH_NAMES = {
     "january": 1, "february": 2, "march": 3, "april": 4,
@@ -51,17 +54,29 @@ def orchestrator_node(state: ExpenseReportState) -> ExpenseReportState:
         state.date_range = resolve_last_month(system_date)
         period_label = "last month"
     
-    state.execution_plan = [
-        "Data Retrieval",
-        "Filter & Validation",
-        "Categorization",
-        "Calculation",
-        "Expense Review",
-        "Report Generation",
-        "Memory Persistence",
-        "Email Dispatch"
-    ]
-    
+    # ── Unit II: Planning & Reasoning ───────────────────────────────────
+    # Decide which optional stages this run actually needs, instead of
+    # always walking the same fixed sequence regardless of what was asked.
+    state.intent = parse_intent(state.request_text)
+
+    plan = ["Data Retrieval", "Filter & Validation", "Categorization", "Calculation"]
+    if state.intent.anomaly_threshold is not None:
+        plan.append("Anomaly Detection")
+    if state.intent.compare_to_previous:
+        plan.append("Period Comparison")
+    plan += ["Expense Review", "Report Generation", "Memory Persistence", "Email Dispatch"]
+    state.execution_plan = plan
+
+    state.run_log.append({
+        "agent": "Orchestrator",
+        "action": (
+            f"Plan ({state.intent.planning_mode}): anomaly_threshold="
+            f"{state.intent.anomaly_threshold}, compare_to_previous="
+            f"{state.intent.compare_to_previous}"
+        ),
+        "status": "COMPLETED"
+    })
+
     # ── Unit III: Memory Recall ─────────────────────────────────────────
     try:
         prior_reports = get_reports_by_period(period_label, user_id=state.user_id)
@@ -85,6 +100,14 @@ def orchestrator_node(state: ExpenseReportState) -> ExpenseReportState:
             })
     except Exception as e:
         state.historical_context = {"prior_report_count": 0, "error": str(e)}
+
+    # ── Configurable autonomy level ──────────────────────────────────────
+    state.max_retries = AUTONOMY_RETRY_LIMITS.get(state.autonomy_level, AUTONOMY_RETRY_LIMITS["co_pilot"])
+    state.run_log.append({
+        "agent": "Orchestrator",
+        "action": f"Autonomy level: {state.autonomy_level} (max {state.max_retries} auto-correction retries)",
+        "status": "COMPLETED",
+    })
 
     state.agent_status["Orchestrator"] = "COMPLETED"
     state.run_log.append({"agent": "Orchestrator", "action": f"Resolved period: {period_label}", "status": "COMPLETED"})

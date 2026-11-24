@@ -19,7 +19,7 @@
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [How it works](#how-it-works)
-- [Unit III & IV extensions](#unit-iii--iv-extensions)
+- [Unit II, III & IV extensions](#unit-ii-iii--iv-extensions)
 - [Tech stack](#tech-stack)
 - [Project structure](#project-structure)
 - [Getting started](#getting-started)
@@ -46,7 +46,8 @@ Two design principles run through the project:
 
 ## Features
 
-- **Autonomous 10-stage agent pipeline** built on LangGraph, with live status for every stage.
+- **Autonomous agent pipeline** built on LangGraph, with live status for every stage.
+- **Request-driven planning** — a Planner parses the request for an anomaly threshold or a "compare to last period" ask and adds those stages to the run only when requested; a plain request skips them.
 - **Data validation** — flags missing dates and amounts, excludes duplicates, flags unsupported currencies, filters to the requested month.
 - **Hybrid categorisation** — deterministic keyword rules first, LLM (Groq) only when unsure.
 - **Confirmed vs. provisional totals** — flagged items never silently change the confirmed total.
@@ -55,6 +56,11 @@ Two design principles run through the project:
 - **Persistent memory** — every report is saved to SQLite; browse Report History, recall prior reports, and **export the history as a PDF**.
 - **Professional outputs** — PDF report and an HTML email that mirrors the dashboard (itemised table, category breakdown, items needing review).
 - **Modern dashboard** — responsive React UI with a collapsible sidebar, pipeline visualisation with per-stage details, run-log timeline, agent-communication view, and CSV drag-and-drop upload.
+- **Reflection on the LLM fallback** — categorization's second LLM pass critiques the first pass's proposal before committing, logged either way.
+- **Configurable autonomy** — `cautious` / `co_pilot` / `trusting` tunes how many auto-correction retries happen before escalating; email dispatch still always needs explicit human approval.
+- **Guardrails** — untrusted CSV/receipt fields are sanitized before any LLM call, every LLM response is whitelist- or schema-validated, and free text is PII-redacted before it reaches an audit log.
+- **Tool use** — a real currency-conversion API call (with an offline fallback) and a retrieval-grounded reimbursement policy citation, both informational and never substituted into a reconciled total.
+- **Automated evaluation harness** — scores categorization accuracy, Review Agent detection rates and retry-loop resolution against labelled fixtures; see `jury/evaluation_report.md`.
 
 ## Screenshots
 
@@ -71,7 +77,8 @@ All agents read from and write to one shared state object, the **blackboard** (`
 
 ```mermaid
 flowchart LR
-    A["Orchestrator"] --> B["Data Retrieval"] --> C["Filter & Validation"] --> D["Categorization"] --> E["Calculation"] --> F["Expense Review"]
+    A["Orchestrator<br/>(Planner)"] --> B["Data Retrieval"] --> C["Filter & Validation"] --> D["Categorization"] --> E["Calculation"]
+    E --> AD["Anomaly Detection"] --> PC["Period Comparison"] --> F["Expense Review"]
     F -- passed --> G["Report Generation"]
     F -- critical finding --> H["Correction"] --> I["Re-Review"]
     I -- passed --> G
@@ -84,18 +91,20 @@ flowchart LR
 
 | # | Stage | What it does | LLM? |
 |---|---|---|---|
-| 1 | **Orchestrator** | Reads the month from the request (falls back to "last month"), builds the plan, recalls prior reports from memory | No |
+| 1 | **Orchestrator** | Reads the month from the request (falls back to "last month"); its Planner parses the request for an anomaly threshold / comparison ask and builds the execution plan; recalls prior reports from memory | Fallback only |
 | 2 | **Data Retrieval** | Loads and parses `backend/data/expenses.csv` | No |
 | 3 | **Filter & Validation** | Filters to the period; flags missing date/amount and unsupported currency; excludes duplicates | No |
 | 4 | **Categorization** | Airfare / Lodging / Meals / Ground Transport via keyword rules; LLM fallback for unknown merchants | Fallback only |
 | 5 | **Calculation** | Exact decimal totals: confirmed, provisional, per-category | No |
-| 6 | **Expense Review** | Independently re-checks totals, duplicates, missing fields, category subtotals and report consistency | No |
-| 7 | **Correction** | Fixes critical findings and recalculates; replies to the Review agent | No |
-| 8 | **Report Generation** | Builds the PDF report (ReportLab) | No |
-| 9 | **Memory Persistence** | Saves the report summary to SQLite | No |
-| 10 | **Email Dispatch** | Sends the report email — only after human approval | No |
+| 6 | **Anomaly Detection** | Flags expenses above a requested threshold (e.g. "flag anything over 2000"); runs only if asked, otherwise reports "Skipped" | No |
+| 7 | **Period Comparison** | Recalls the previous period's confirmed total from memory and reports the delta; runs only if a comparison was requested | No |
+| 8 | **Expense Review** | Independently re-checks totals, duplicates, missing fields, category subtotals and report consistency | No |
+| 9 | **Correction** | Fixes critical findings and recalculates; replies to the Review agent | No |
+| 10 | **Report Generation** | Builds the PDF report (ReportLab) | No |
+| 11 | **Memory Persistence** | Saves the report summary to SQLite | No |
+| 12 | **Email Dispatch** | Sends the report email — only after human approval | No |
 
-A run that finds nothing to correct simply skips stage 7 ("Not needed" in the UI). Stage 10 stays at **Waiting for approval** until a reviewer acts.
+Stages 6 and 7 always run but no-op ("Skipped" in the UI) unless the request asked for them — see [Unit II, III & IV extensions](#unit-ii-iii--iv-extensions). A run that finds nothing to correct simply skips stage 9 ("Not needed" in the UI). Stage 12 stays at **Waiting for approval** until a reviewer acts.
 
 ### Review and correction loop
 
@@ -103,15 +112,16 @@ The Review agent recomputes every figure and raises findings with a severity. **
 
 ### Human approval gate
 
-After the report is saved, the pipeline stops. Nothing is emailed until a reviewer clicks **Approve & Dispatch Email** (or **Reject**) in the dashboard, which calls a separate API endpoint.
+After the report is saved, the pipeline stops. Nothing is emailed until a reviewer clicks **Approve and send** (or **Reject**) in the dashboard, which calls a separate API endpoint.
 
-## Unit III & IV extensions
+## Unit II, III & IV extensions
 
 This project was extended for the *Agentic AI* (23CSE4018) mini-project jury.
 
 | Unit | Concept | Implementation |
 |---|---|---|
-| **III** — Memory, Tools & Environment | Short- and long-term memory | **Short-term:** the shared blackboard state, alive for one run. **Long-term:** report summaries persisted in SQLite and recalled by the Orchestrator; browsable in *Report History* and *Memory & Insights*. |
+| **II** — Planning & Reasoning | Deriving an execution plan from the request instead of a hardcoded sequence | A Planner (`planner_service.py`) parses the request for an anomaly threshold and a comparison ask (deterministic regex, refined by an LLM when configured) and builds `execution_plan` accordingly; two optional stages (Anomaly Detection, Period Comparison) run only when requested. |
+| **III** — Memory, Tools & Environment | Short- and long-term memory; tool use | **Short-term:** the shared blackboard state, alive for one run. **Long-term:** report summaries persisted in SQLite and recalled by the Orchestrator and the Period Comparison stage; browsable in *Report History* and *Memory & Insights*. **Tool use:** reimbursement decisions are grounded by retrieving the relevant clause from `travel_policy.md` (`policy_rag.py`) instead of a hardcoded string — see the citation in each claim's reason. |
 | **IV** — Multi-Agent Systems & Collaboration | Role-based agents, structured communication, human-in-the-loop | Specialist agents with bounded roles; typed `AgentMessage` objects between Review and Correction; bounded retry loop with escalation; approval gate before dispatch. |
 
 ## Tech stack
@@ -132,10 +142,10 @@ This project was extended for the *Agentic AI* (23CSE4018) mini-project jury.
 expense-report-agent/
 ├── backend/
 │   ├── app/
-│   │   ├── agents/        # one module per agent (orchestrator, review, correction, ...)
+│   │   ├── agents/        # one module per agent (orchestrator, anomaly, comparison, review, correction, ...)
 │   │   ├── graph/         # LangGraph workflow and routing (expense_graph.py)
 │   │   ├── models/        # SQLAlchemy models (report history, messages, preferences)
-│   │   ├── services/      # memory, PDF, email, CSV parsing, LLM, email template
+│   │   ├── services/      # memory, planner, PDF, email, CSV parsing, LLM, email template
 │   │   ├── state/         # blackboard (ExpenseReportState) and message types
 │   │   └── main.py        # FastAPI app and endpoints
 │   ├── data/              # expenses.csv (active dataset) and sample datasets
@@ -223,9 +233,9 @@ CSV columns: `date` (`YYYY-MM-DD`), `expense_id`, `description`, `amount`, `curr
    Generate my travel expense report for July 2026 and email it to finance.
    ```
    Without a recognisable "Month YYYY", it falls back to "last month" (July 2026 — the system date is fixed at 31 Aug 2026).
-3. Click **Run Agent** and watch the pipeline; click any stage for its log entries.
+3. Click **Generate report** and watch the pipeline; click any stage for its log entries.
 4. Review the metrics, itemised expenses, category breakdown and review findings.
-5. **Approve & Dispatch Email** (or **Reject**).
+5. **Approve and send** (or **Reject**).
 6. Open **Report History** to browse saved reports and **Export PDF**.
 
 **Demo the Unit IV loop:** open *Advanced · demonstration settings* and tick *Inject calculation discrepancy*. The Review agent will catch the deliberate error, send a correction request, and the Correction agent will fix it (see *Agent communication*).
@@ -271,7 +281,7 @@ npm run build
 
 Documented honestly so nobody is surprised:
 
-- **Fixed workflow.** The pipeline is a predefined LangGraph graph; the Orchestrator's plan is a fixed list, not dynamic LLM planning.
+- **Bounded planning.** The Orchestrator's Planner chooses from a small, pre-declared set of optional stages (Anomaly Detection, Period Comparison); it does not let an LLM freely construct or reorder the LangGraph topology itself — a deliberate choice for an auditable financial pipeline (see [viva_questions.md](jury/viva_questions.md#q0)).
 - **Minimal LLM use.** Only the categorisation fallback calls a model. Arithmetic and review are deliberately LLM-free.
 - **Run state is in memory.** Live run state (and therefore approve/reject) lives in the server process; restarting the backend loses in-flight runs. Saved reports persist in SQLite.
 - **Agent messages are not persisted.** They are returned with the live run and shown in the UI, but are not written to the database, so `/run/{id}/messages` is empty for live runs.
@@ -283,3 +293,9 @@ Documented honestly so nobody is surprised:
 ## Authors
 
 Rakshit Girase, Anuska Kumari and Suketu Mishra — L.Y. B.Tech (AIA-08), *Agentic AI*.
+
+## Receipt-based reimbursement review
+
+Select **Two-claim jury demo** on the dashboard to compare the claimed and reimbursable amounts for the same expenses. For uploaded data, enable **Apply reimbursement policy** before generating the report. The [final jury walkthrough](jury/demo_guide.md#final-jury-demonstration) covers receipt formats, policy decisions, history and PDF export.
+
+Select **Receipt agent demo** to see the Exception Resolution Agent find an unattached receipt, the Evidence Reviewer verify the proposed match, and an amount discrepancy reach the human reviewer. [Receipt agent demonstration](jury/demo_guide.md#receipt-agent-demonstration)

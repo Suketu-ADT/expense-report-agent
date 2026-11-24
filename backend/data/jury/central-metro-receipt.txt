@@ -1,0 +1,4 @@
+Receipt ID: CM-119
+Merchant: Central Metro
+Date: 2026-07-11
+Total: INR 250.00

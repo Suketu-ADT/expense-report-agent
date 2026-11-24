@@ -63,5 +63,29 @@ def generate_pdf_report(state: ExpenseReportState, run_id: str) -> str:
             story.append(t)
             story.append(Spacer(1, 12))
     
+    if state.reimbursement:
+        from xml.sax.saxutils import escape
+        from app.services.reimbursement import summary
+        sheet = state.reimbursement
+        totals = summary(sheet)
+        story.append(Paragraph("REIMBURSEMENT DECISIONS", styles["Heading2"]))
+        story.append(Paragraph(f"Meal cap per claim: INR {sheet['meal_cap']}. Open exceptions: {totals['held']}", styles["Normal"]))
+        for key in ("claimed", "approved", "difference"):
+            story.append(Paragraph(f"{key.title()} (INR): {totals[key]/100:.2f}", styles["Normal"]))
+        for item in sheet["items"]:
+            heading = f"{item['id']} | {item['merchant']} | {item['status']}"
+            story.append(Paragraph(escape(heading), styles["Heading3"]))
+            receipt = item["evidence"] or {}
+            evidence_amount = receipt.get("amount")
+            receipt_total = "unavailable" if evidence_amount is None else f"INR {evidence_amount/100:.2f}"
+            claimed = "unavailable" if item["claimed"] is None else f"{item['currency']} {item['claimed']/100:.2f}"
+            details = [f"Claim {claimed}. Receipt {receipt_total}. Approved INR {item['approved']/100:.2f}.",
+                       item["reason"]]
+            details.extend(f"{event['action'].title()}: {event['note']}" for event in item["events"] if event["note"])
+            if decision := item.get("agent_review"):
+                details.extend([f"Exception Resolution Agent: {decision['action']}",
+                                f"Evidence Reviewer: {decision['verification']}"])
+            for detail in details:
+                story.append(Paragraph(escape(detail), styles["Normal"]))
     doc.build(story)
     return filepath

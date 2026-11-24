@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
-import { History, RefreshCw, ChevronDown, Loader2, Inbox, FileDown } from 'lucide-react';
+import { ArrowRight, History, RefreshCw, ChevronDown, Loader2, Inbox, FileDown } from 'lucide-react';
 import Card from './ui/Card';
 import Badge from './ui/Badge';
 import Notice from './ui/Notice';
@@ -15,7 +15,7 @@ const REVIEW_LABEL = {
   needs_human_review: 'Human review',
 };
 
-export default function ReportHistory() {
+export default function ReportHistory({ onResume, disabled, limit, onViewAll }) {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -80,12 +80,13 @@ export default function ReportHistory() {
   return (
     <Card
       id="history-card"
-      title="Report history"
-      description="Reports saved to persistent memory (SQLite). Select a report to load its saved details."
-      icon={History}
+      title={limit ? 'Recent reports' : 'Saved reports'}
+      icon={limit ? undefined : History}
       flush
       actions={
-        <>
+        onViewAll ? <button type="button" className="btn btn-secondary btn-sm" onClick={onViewAll}>
+          View history <ArrowRight size={15} aria-hidden="true" />
+        </button> : <>
           <button
             type="button"
             className="btn btn-secondary btn-sm"
@@ -123,7 +124,7 @@ export default function ReportHistory() {
 
       {!loading && !error && reports.length === 0 && (
         <EmptyState icon={Inbox} title="No previous reports">
-          Run the agent to generate your first report. It will be saved here automatically.
+          Generated reports are saved here automatically.
         </EmptyState>
       )}
 
@@ -132,13 +133,13 @@ export default function ReportHistory() {
           <div className="history-cols" aria-hidden="true">
             <span>Report</span>
             <span>Period</span>
-            <span className="num">Final amount</span>
+            <span className="num">Confirmed total</span>
             <span>Review status</span>
             <span>Created</span>
             <span />
           </div>
           <ul className="history-list">
-            {reports.map((report) => {
+            {reports.slice(0, limit ?? reports.length).map((report) => {
               const open = expandedId === report.report_id;
               const busy = loadingId === report.report_id;
               return (
@@ -153,7 +154,7 @@ export default function ReportHistory() {
                   >
                     <span className="mono history-id" data-label="Report">{report.report_id}</span>
                     <span data-label="Period">{report.period_label}</span>
-                    <span className="num history-amount" data-label="Final amount">{formatMoney(report.confirmed_total)}</span>
+                    <span className="num history-amount" data-label="Confirmed total">{formatMoney(report.confirmed_total)}</span>
                     <span data-label="Review status">
                       <Badge tone={REVIEW_TONE[report.review_status] || 'neutral'}>
                         {REVIEW_LABEL[report.review_status] || humanize(report.review_status) || 'Pending'}
@@ -171,6 +172,8 @@ export default function ReportHistory() {
 
                   {open && selectedReport && (
                     <div id={`report-${report.report_id}`} className="history-detail">
+                      {selectedReport.reimbursement && <p>Approved reimbursement {formatMoney(selectedReport.reimbursement.approved / 100)} | {selectedReport.reimbursement.held} held
+                         {' '}<button className="btn" disabled={disabled} onClick={() => onResume(selectedReport.run_id)}>Open claim decisions</button></p>}
                       <dl className="detail-grid">
                         <div><dt>Confirmed total</dt><dd className="num text-success">{formatMoney(selectedReport.confirmed_total)}</dd></div>
                         <div><dt>Provisional total</dt><dd className="num text-warning">{formatMoney(selectedReport.provisional_total)}</dd></div>

@@ -6,7 +6,9 @@ def retrieval_node(state: ExpenseReportState) -> ExpenseReportState:
     state.agent_status["Data Retrieval"] = "RUNNING"
     
     try:
-        raw_data = get_expenses(state.user_id)
+        from app.services.reimbursement import jury_claims
+        raw_data = (jury_claims(state.resolution_demo) if state.policy_demo or state.resolution_demo
+                    else get_expenses(state.user_id))
         state.raw_expenses = raw_data
         state.agent_status["Data Retrieval"] = "COMPLETED"
         state.run_log.append({

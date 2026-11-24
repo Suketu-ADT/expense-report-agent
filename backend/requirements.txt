@@ -10,3 +10,5 @@ pytest
 requests
 sqlalchemy
 python-multipart
+Pillow
+pypdf>=6,<7

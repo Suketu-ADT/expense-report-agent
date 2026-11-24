@@ -1,5 +1,5 @@
 import React from 'react';
-import { getRunCurrency, formatRunMoney } from '../utils/format';
+import { getRunCurrency, formatMoney, formatRunMoney } from '../utils/format';
 
 /**
  * Four headline metrics. A figure is shown only once the backend has produced
@@ -24,8 +24,29 @@ export default function SummaryCards({ data, isRunning }) {
     : null;
 
   const mixedNote = currency.mixed ? `Mixed currencies (${currency.codes.join(', ')}), not converted` : null;
+  const reimbursement = data?.reimbursement;
 
-  const cards = [
+  // ── Unit II: Planning & Reasoning — only shown when the planner decided
+  // the run actually needed these stages (see Orchestrator / intent).
+  const anomalyCount = data?.agent_status?.['Anomaly Detection'] === 'COMPLETED' && Array.isArray(data?.categorized_expenses)
+    ? data.categorized_expenses.filter((e) => e.is_anomaly).length
+    : null;
+  const comparison = data?.agent_status?.['Period Comparison'] === 'COMPLETED' ? data?.comparison : null;
+
+  // ── Unit III: Tool use — only shown when a non-INR currency actually
+  // triggered the Currency Conversion agent to do real work.
+  const converted = data?.agent_status?.['Currency Conversion'] === 'COMPLETED' ? data?.converted_total_inr : null;
+  const conversionSources = data?.currency_conversions
+    ? Object.values(data.currency_conversions).map((c) => c.source)
+    : [];
+  const anyOfflineRate = conversionSources.includes('offline-fallback');
+
+  const cards = reimbursement ? [
+    { key: 'claimed', label: 'Claimed', value: formatMoney(reimbursement.claimed / 100) },
+    { key: 'approved', label: 'Approved', value: formatMoney(reimbursement.approved / 100), tone: 'success' },
+    { key: 'difference', label: 'Difference', value: formatMoney(reimbursement.difference / 100) },
+    { key: 'held', label: 'Claims on hold', value: reimbursement.held, tone: reimbursement.held ? 'warning' : 'neutral' },
+  ] : [
     {
       key: 'confirmed',
       label: 'Confirmed total',
@@ -56,22 +77,61 @@ export default function SummaryCards({ data, isRunning }) {
     },
   ];
 
+  if (anomalyCount !== null) {
+    cards.push({
+      key: 'anomalies',
+      label: 'Flagged anomalies',
+      tone: anomalyCount > 0 ? 'warning' : 'neutral',
+      value: String(anomalyCount),
+      note: `Above ${formatMoney(data?.intent?.anomaly_threshold ?? 0)}`,
+    });
+  }
+
+  if (comparison) {
+    cards.push(
+      comparison.available
+        ? {
+            key: 'comparison',
+            label: `vs ${comparison.previous_period}`,
+            tone: comparison.delta >= 0 ? 'warning' : 'success',
+            value: `${comparison.delta >= 0 ? '+' : ''}${formatMoney(comparison.delta)}`,
+            note: `Was ${formatMoney(comparison.previous_total)}`,
+          }
+        : {
+            key: 'comparison',
+            label: `vs ${comparison.previous_period}`,
+            tone: 'neutral',
+            value: '—',
+            note: 'No prior report found for that period',
+          }
+    );
+  }
+
+  if (converted !== null) {
+    cards.push({
+      key: 'converted',
+      label: 'Converted total (INR)',
+      tone: 'accent',
+      value: formatMoney(converted),
+      note: anyOfflineRate ? 'Includes an offline fallback rate' : 'Live exchange rates',
+    });
+  }
+
   return (
     <div className="metric-grid" role="group" aria-label="Financial summary">
       {cards.map((c) => (
         <div className="metric" key={c.key}>
           <div className="metric-label">
-            <span className={`metric-dot metric-dot-${c.tone}`} aria-hidden="true" />
             {c.label}
           </div>
           {c.value !== null ? (
-            <div className={`metric-value metric-${c.tone}`}>{c.value}</div>
+            <div className={`metric-value metric-${c.tone || 'neutral'}`}>{c.value}</div>
           ) : isRunning ? (
             <div className="metric-value"><span className="skeleton skeleton-value" aria-label="Loading" /></div>
           ) : (
             <div className="metric-value metric-empty" aria-label="Not available">—</div>
           )}
-          <div className="metric-note">{c.note}</div>
+          {c.note && <div className="metric-note">{c.note}</div>}
         </div>
       ))}
     </div>

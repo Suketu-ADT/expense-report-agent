@@ -10,7 +10,10 @@ import { formatMonthYear } from '../utils/format';
  */
 export default function RunOutcome({ status, runData, startError, pollError, onNavigate }) {
   const flaggedForReview = (runData?.missing_data_flags || []).filter((f) => f.status === 'NEEDS_REVIEW').length;
-  const awaitingApproval = status === 'completed' && runData && runData.delivery_status !== 'delivered';
+  const awaitingApproval = status === 'completed' && runData && !runData.reimbursement
+    && runData.delivery_status !== 'delivered' && runData.approval_status !== 'rejected';
+
+  if (status === 'idle' && !pollError) return null;
 
   let tone = 'idle';
   let Icon = CircleDashed;
@@ -50,18 +53,16 @@ export default function RunOutcome({ status, runData, startError, pollError, onN
 
           {tone === 'completed' && (
             <ul className="outcome-lines">
-              {runData.delivery_status === 'delivered' && <li>Report generated successfully. Email delivery was successful.</li>}
-              {runData.delivery_status === 'failed' && <li>Report generated successfully. Email delivery failed.</li>}
+              {runData.delivery_status === 'delivered' && <li>Report email delivered.</li>}
+              {runData.delivery_status === 'failed' && <li>Email delivery failed.</li>}
               {runData.delivery_status === 'pending' && runData.needs_human_review && (
                 <li className="text-warning">Email dispatch held: Requires human review before sending.</li>
               )}
-              {runData.delivery_status === 'pending' && !runData.needs_human_review && (
-                <li>Pipeline finished. Email delivery pending.</li>
+              {runData.delivery_status === 'pending' && !runData.needs_human_review && runData.approval_status !== 'rejected' && (
+                <li>Awaiting approval to send the report.</li>
               )}
-              {flaggedForReview > 0 && <li>{flaggedForReview} item(s) require review.</li>}
-              {runData.report_id && (
-                <li>Persisted in SQLite memory as <strong className="mono">{runData.report_id}</strong></li>
-              )}
+              {runData.approval_status === 'rejected' && <li>Report rejected.</li>}
+              {flaggedForReview > 0 && <li>{flaggedForReview} expenses flagged during validation.</li>}
             </ul>
           )}
 

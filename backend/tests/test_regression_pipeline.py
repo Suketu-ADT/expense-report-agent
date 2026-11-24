@@ -18,6 +18,13 @@ from app.agents.memory_agent import persist_memory_node
 from app.services.memory_service import save_report_summary, get_all_reports, get_reports_by_period
 
 
+@pytest.fixture(autouse=True)
+def july_regression_data(monkeypatch):
+    from pathlib import Path
+    sample = Path(__file__).resolve().parents[1] / "data" / "expenses_july_2026.csv"
+    monkeypatch.setattr("app.services.expense_service.EXPENSES_CSV", sample)
+
+
 @pytest.fixture
 def isolated_db():
     with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as tmp:

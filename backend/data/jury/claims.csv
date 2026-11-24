@@ -1,0 +1,3 @@
+expense_id,date,merchant,amount,currency
+MEAL-01,2026-07-10,Campus Cafe,1200,INR
+TAXI-02,2026-07-10,City Taxi,350,INR

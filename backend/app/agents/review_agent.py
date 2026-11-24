@@ -161,6 +161,11 @@ def review_node(state: ExpenseReportState) -> ExpenseReportState:
         overall_status = "passed"
     elif critical_findings:
         overall_status = "needs_correction"
+    elif state.autonomy_level == "cautious":
+        # Cautious mode doesn't let even a warning-only finding pass
+        # silently — it escalates to a human instead of trusting the
+        # pipeline's own judgment that a warning is safe to ignore.
+        overall_status = "needs_human_review"
     else:
         overall_status = "passed"  # warnings only → still pass
 

@@ -1,7 +1,33 @@
 # Agentic AI Viva Voce Preparation Guide
-## Units III & IV: Memory, Tools & Multi-Agent Systems
+## Units II, III & IV: Planning, Memory, Tools & Multi-Agent Systems
 
 This document contains likely technical and architectural questions a university examination jury will ask regarding the Expense Report Agent, paired with concise, authoritative answers.
+
+---
+
+### Q0: The Orchestrator used to run a fixed sequence. How does it plan now, and why didn't you just let an LLM choose the whole graph dynamically?
+**Answer:**
+The Orchestrator's **Planner** (`app/services/planner_service.py`) parses the request text into a structured `RequestIntent` — an anomaly-flagging threshold and a comparison flag, in addition to the existing month/year extraction — using a deterministic regex pass that always runs, optionally refined by an LLM call when `GROQ_API_KEY` is set. The Orchestrator then builds `state.execution_plan` by inserting an **Anomaly Detection** stage and/or a **Period Comparison** stage only when the corresponding intent was detected; both stages always appear in `agent_status` as either `COMPLETED` or `SKIPPED`, so the plan is visible and auditable in the dashboard either way.
+
+We deliberately did **not** let an LLM choose the entire LangGraph topology at runtime. A financial pipeline needs a fixed, auditable set of nodes — letting an LLM freely rearrange *which* agents run (not just whether two optional ones run) would reintroduce exactly the kind of non-determinism the Unit IV Review Agent exists to guard against. So planning here means reasoning over the request to pick from a bounded, pre-declared set of optional stages, not open-ended graph construction.
+
+---
+
+### Q0b: You said arithmetic avoids LLMs. Where does retrieval (RAG) actually appear in this system, and why didn't you use embeddings or a vector database?
+**Answer:**
+The reimbursement engine (`app/services/reimbursement.py`) used to justify every capped decision with one hardcoded string. It now retrieves the relevant clause from the travel policy document (`data/policy/travel_policy.md`) via `app/services/policy_rag.py`: the document is chunked by section, and each decision queries the chunk store with the expense's category, scored by a local term-overlap retriever.
+
+We used term-overlap rather than embeddings deliberately: the policy document has five short, topically distinct sections (one per expense category plus one for receipt evidence), so a heavier semantic retriever would add a dependency and, for this environment's offline jury-demo requirement, a model download, for no measurable gain over exact keyword matching on a five-chunk corpus. The pattern — not the embedding technology — is what Unit III's "tool use" is assessing: the agent treats an external document as a queryable source of truth instead of encoding its content as logic, and the citation it retrieves is visible end-to-end in the reviewer UI and the generated PDF.
+
+Critically, retrieval only grounds the *explanation*. The actual approved amount still comes from the same deterministic arithmetic as before — we re-ran the full 500-claim `ExpenseFlow-Large-Dataset` regression after this change and it still reports `"result": "passed"` against every expected value, which is how we know the citation didn't quietly change a decision.
+
+---
+
+### Q0c: You added "autonomy levels" and a "multi-agent debate." Why does neither of them let the system send money without a human?
+**Answer:**
+"Levels of autonomy" here means how much the Correction loop is trusted to fix things itself before asking a human — `cautious` (`max_retries=0`, escalates on any finding including warnings) vs `co_pilot` (the original 3-retry behavior) vs `trusting` (5 retries). None of the three levels touch the approval gate before Email Dispatch; that stays mandatory in every level, by design (see `jury/ethics_and_compliance.md`).
+
+The receipt-matching debate (two LLM advocates argue for one of two candidate receipts, a judge opines) is advisory for the same reason, not a design oversight — the first version let the judge's pick actually attach the receipt, and it broke a labelled regression test by silently approving a claim that the deterministic rules would have held for a human. That's exactly the failure mode the rest of this project is built to avoid, so the debate was kept as a transcript the reviewer sees alongside the claim, never as the decision itself.
 
 ---
 

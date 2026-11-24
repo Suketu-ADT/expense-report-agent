@@ -28,6 +28,15 @@ def email_node(state: ExpenseReportState) -> ExpenseReportState:
     # plain-text body above stays as the fallback for clients that cannot show HTML.
     html_body = build_expense_report_html(state)
 
+    if state.reimbursement:
+        from app.services.reimbursement import summary
+        amounts = summary(state.reimbursement)
+        if amounts["held"]:
+            raise ValueError("Resolve held claims before dispatch")
+        line = f"Approved reimbursement: INR {amounts['approved']/100:.2f}"
+        body += line + "\n"
+        html_body = html_body.replace("</body>", f"<p>{line}</p></body>")
+
     success = send_email(to_email, subject, body, state.report_file, html_body=html_body)
     
     if success:

@@ -1,0 +1,27 @@
+tier,merchant,amount,hint,expected_category
+rule,IndiGo Airlines,4500,,Airfare
+rule,Air India Flight,6200,,Airfare
+rule,Vistara Airlines,5100,,Airfare
+rule,Emirates Flight,18000,,Airfare
+rule,Taj Hotel,7200,,Lodging
+rule,Marriott Hotel,9800,,Lodging
+rule,Hyatt Hotel,8800,,Lodging
+rule,Hilton Hotel,10200,,Lodging
+rule,Starbucks Coffee,350,,Meals
+rule,Zomato Dinner,620,,Meals
+rule,Swiggy Lunch,480,,Meals
+rule,Campus Cafe,300,,Meals
+rule,Uber Ride,220,,Ground Transport
+rule,Ola Cabs,180,,Ground Transport
+rule,City Taxi,300,,Ground Transport
+rule,Metro Card Recharge,100,,Ground Transport
+fallback,Pizza Hut,450,,Meals
+fallback,Domino's,500,,Meals
+fallback,IRCTC Train Booking,850,,Ground Transport
+fallback,Decathlon Sports,1200,,Other / Uncategorized
+fallback,Oyo Rooms,2500,,Lodging
+fallback,Rapido Bike Taxi,90,,Ground Transport
+fallback,Costa Coffeehouse,280,,Meals
+fallback,SpiceJet Flight,4200,,Airfare
+fallback,Amazon Purchase,999,,Other / Uncategorized
+fallback,WeWork Day Pass,1500,,Other / Uncategorized

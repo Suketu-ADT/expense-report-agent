@@ -10,6 +10,9 @@ from app.agents.email_agent import email_node
 from app.agents.review_agent import review_node
 from app.agents.correction_agent import correction_node
 from app.agents.memory_agent import persist_memory_node
+from app.agents.anomaly_agent import anomaly_detection_node
+from app.agents.comparison_agent import comparison_node
+from app.agents.currency_agent import currency_conversion_node
 
 def check_retrieval(state: ExpenseReportState) -> str:
     if state.agent_status.get("Data Retrieval") == "FAILED":
@@ -24,8 +27,9 @@ def check_validation(state: ExpenseReportState) -> str:
         msg = "No valid expense records remained after Filter & Validation."
         state.errors.append(msg)
         for stage in [
-            "Categorization", "Calculation", "Expense Review",
-            "Correction", "Report Generation", "Memory Persistence", "Email Dispatch"
+            "Currency Conversion", "Categorization", "Calculation", "Anomaly Detection",
+            "Period Comparison", "Expense Review", "Correction", "Report Generation",
+            "Memory Persistence", "Email Dispatch"
         ]:
             if stage not in state.agent_status:
                 state.agent_status[stage] = "SKIPPED"
@@ -36,7 +40,7 @@ def check_validation(state: ExpenseReportState) -> str:
             "error": msg,
         })
         return "end"
-    return "categorization"
+    return "currency"
 
 def check_review(state: ExpenseReportState) -> str:
     """Route based on review outcome: passed → report, needs_correction → correct, needs_human_review → escalate."""
@@ -115,8 +119,11 @@ def build_graph():
     builder.add_node("Orchestrator", orchestrator_node)
     builder.add_node("Data Retrieval", retrieval_node)
     builder.add_node("Filter & Validation", validation_node)
+    builder.add_node("Currency Conversion", currency_conversion_node)
     builder.add_node("Categorization", categorization_node)
     builder.add_node("Calculation", calculation_node)
+    builder.add_node("Anomaly Detection", anomaly_detection_node)
+    builder.add_node("Period Comparison", comparison_node)
     builder.add_node("Expense Review", review_node)
     builder.add_node("Correction", correction_node)
     builder.add_node("Re-Review", review_node)   # Same review logic for re-review pass
@@ -137,11 +144,14 @@ def build_graph():
     builder.add_conditional_edges(
         "Filter & Validation",
         check_validation,
-        {"categorization": "Categorization", "end": END}
+        {"currency": "Currency Conversion", "end": END}
     )
 
+    builder.add_edge("Currency Conversion", "Categorization")
     builder.add_edge("Categorization", "Calculation")
-    builder.add_edge("Calculation", "Expense Review")
+    builder.add_edge("Calculation", "Anomaly Detection")
+    builder.add_edge("Anomaly Detection", "Period Comparison")
+    builder.add_edge("Period Comparison", "Expense Review")
 
     # Review → conditional routing
     builder.add_conditional_edges(

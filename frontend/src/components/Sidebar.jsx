@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, PanelLeftClose, PanelLeftOpen, Sparkles } from 'lucide-react';
+import { X, PanelLeftClose, PanelLeftOpen, Receipt } from 'lucide-react';
 import { NAV_ITEMS } from '../navigation';
 
 export default function Sidebar({
@@ -9,7 +9,6 @@ export default function Sidebar({
   onToggleCollapsed,
   mobileOpen,
   onMobileClose,
-  runStatus,
 }) {
   return (
     <>
@@ -27,7 +26,7 @@ export default function Sidebar({
         <div className="sidebar-head">
           <div className="brand">
             <span className="brand-mark" aria-hidden="true">
-              <Sparkles size={15} />
+              <Receipt size={20} strokeWidth={1.8} />
             </span>
             <span className="brand-text">
               ExpenseFlow<span className="brand-ai"> AI</span>
@@ -67,17 +66,6 @@ export default function Sidebar({
         </nav>
 
         <div className="sidebar-foot">
-          <div className="sidebar-status" title={`Agent run: ${runStatus.label}`}>
-            <span className={`status-dot status-dot-${runStatus.tone}`} aria-hidden="true" />
-            <span className="sidebar-status-text">
-              <span className="sidebar-status-label">Agent run</span>
-              <span className="sidebar-status-value">{runStatus.label}</span>
-            </span>
-          </div>
-          <div className="sidebar-product">
-            <strong>ExpenseFlow AI</strong>
-            <span>Autonomous multi-agent expense reporting</span>
-          </div>
           <button
             type="button"
             className="sidebar-collapse"

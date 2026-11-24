@@ -28,6 +28,22 @@ class Expense(BaseModel):
 
 class CategorizedExpense(Expense):
     category: str
+    is_anomaly: bool = False
+
+
+# ── Unit II: Planning & Reasoning ───────────────────────────────────────
+
+class RequestIntent(BaseModel):
+    """Structured intent parsed from the free-form request text.
+
+    The Orchestrator's Planner derives this from the user's natural-language
+    request (deterministic keyword rules, refined by an LLM when available)
+    and uses it to decide which optional stages the run actually needs.
+    """
+    anomaly_threshold: Optional[float] = None
+    compare_to_previous: bool = False
+    planning_mode: str = "deterministic"  # "deterministic" or "llm"
+    planner_error: Optional[str] = None
 
 
 # ── Unit IV: Structured Agent Communication ────────────────────────────
@@ -63,6 +79,10 @@ class ReviewResult(BaseModel):
 
 
 class ExpenseReportState(BaseModel):
+    meal_cap: Optional[int] = None
+    policy_demo: bool = False
+    resolution_demo: bool = False
+    reimbursement: Optional[dict] = None
     user_id: str
     request_text: str = ""
     date_range: Optional[DateRange] = None
@@ -90,6 +110,31 @@ class ExpenseReportState(BaseModel):
     run_id: Optional[str] = None  # Track run_id for memory persistence
     report_id: Optional[str] = None  # ID of saved report in persistent memory
     historical_context: Optional[Dict[str, Any]] = None  # Retrieved past reports
+
+    # ── Unit II: Planning & Reasoning ───────────────────────────────────
+    intent: Optional[RequestIntent] = None  # Parsed plan derived from request_text
+    comparison: Optional[Dict[str, Any]] = None  # Period-over-period comparison result
+
+    # ── Unit III: Tool use — currency conversion (informational only) ───
+    currency_conversions: Optional[Dict[str, Dict[str, Any]]] = None
+    converted_total_inr: Optional[float] = None
+
+    # ── Observability: per-stage wall-clock latency for this run ────────
+    # Populated by main.execute_run from the gaps between successive
+    # LangGraph stream events; LLM-call-level tracing (prompts, tokens,
+    # cost) is available separately via LangSmith — see
+    # jury/observability.md.
+    trace: List[Dict[str, Any]] = Field(default_factory=list)
+
+    # ── Configurable autonomy level ──────────────────────────────────────
+    # "cautious": 0 auto-correction retries, and any review finding (even a
+    #   warning) escalates to a human rather than passing silently.
+    # "co_pilot" (default): the original behavior — up to 3 auto-correction
+    #   retries, only an unresolved critical finding escalates.
+    # "trusting": up to 5 auto-correction retries before escalating.
+    # Email dispatch always requires explicit human approval regardless of
+    # level — see jury/ethics_and_compliance.md for why that stays fixed.
+    autonomy_level: str = "co_pilot"
 
     # ── Unit IV: Multi-agent collaboration ─────────────────────────────
     agent_messages: List[AgentMessage] = Field(default_factory=list)

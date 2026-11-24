@@ -1,5 +1,6 @@
 from app.state.blackboard import ExpenseReportState, CategorizedExpense
-from app.services.llm_service import categorize_expense_with_llm
+from app.services.llm_service import categorize_with_reflection
+from app.services.guardrails import contains_injection_attempt
 
 def categorization_node(state: ExpenseReportState) -> ExpenseReportState:
     state.current_agent = "Categorization"
@@ -25,8 +26,21 @@ def categorization_node(state: ExpenseReportState) -> ExpenseReportState:
                 break
                 
         if not category_assigned:
-            category_assigned = categorize_expense_with_llm(exp.merchant, exp.amount or 0.0, exp.category_hint or "")
-            
+            if contains_injection_attempt(exp.merchant) or contains_injection_attempt(exp.category_hint or ""):
+                state.run_log.append({
+                    "agent": "Categorization",
+                    "action": f"Sanitized a suspicious merchant/hint field before calling the LLM for {exp.id}",
+                    "status": "WARNING",
+                })
+            category_assigned, critique, revised = categorize_with_reflection(
+                exp.merchant, exp.amount or 0.0, exp.category_hint or ""
+            )
+            if critique:
+                action = f"Reflected on {exp.id} ({exp.merchant}): {critique}"
+                if revised:
+                    action += f" — revised to {category_assigned}"
+                state.run_log.append({"agent": "Categorization", "action": action, "status": "COMPLETED"})
+
         categorized.append(CategorizedExpense(**exp.model_dump(), category=category_assigned))
         
     state.categorized_expenses = categorized

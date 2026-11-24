@@ -14,15 +14,30 @@ if (API_URL) {
 }
 
 export const api = {
-    startRun: async (text, injectDiscrepancy = false) => {
+    startRun: async (text, injectDiscrepancy = false, policy = null, autonomyLevel = 'co_pilot') => {
         const response = await axios.post(`${API_URL}/run`, {
+            policy,
             request_text: text,
             user_id: "demo_user",
             inject_discrepancy: injectDiscrepancy,
+            autonomy_level: autonomyLevel,
         });
         return response.data;
     },
     
+    policyPdf: id => `${API_URL}/run/${id}/reimbursement.pdf`,
+    editClaim: async (id, index, edit) => (await axios.post(`${API_URL}/run/${id}/claims/${index}`, edit)).data,
+    originalReceipt: (id, index) => `${API_URL}/run/${id}/claims/${index}/receipt`,
+    attachReceipt: async (id, index, revision, file) => {
+        const form = new FormData();
+        form.append('file', file);
+        return (await axios.post(`${API_URL}/run/${id}/claims/${index}/receipt`, form, { params: { revision } })).data;
+    },
+    reviewReceiptBatch: async (id, revision, files, demo) => {
+        const form = new FormData();
+        for (const file of files) form.append('files', file);
+        return (await axios.post(`${API_URL}/run/${id}/receipt-review`, form, { params: { revision, demo } })).data;
+    },
     getRunStatus: async (runId) => {
         const response = await axios.get(`${API_URL}/run/${runId}`);
         return response.data;

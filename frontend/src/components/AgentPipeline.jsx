@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Settings, Database, Filter, Tag, Calculator, ShieldCheck, RefreshCw, FileText, HardDrive, Send,
+  AlertTriangle, ArrowLeftRight,
   Circle, Loader2, CheckCircle2, CircleMinus, XCircle, Hourglass, Workflow,
 } from 'lucide-react';
 import Card from './ui/Card';
@@ -13,6 +14,8 @@ const AGENTS = [
   { name: 'Filter & Validation', icon: Filter },
   { name: 'Categorization', icon: Tag },
   { name: 'Calculation', icon: Calculator },
+  { name: 'Anomaly Detection', icon: AlertTriangle },
+  { name: 'Period Comparison', icon: ArrowLeftRight },
   { name: 'Expense Review', icon: ShieldCheck },
   { name: 'Correction', icon: RefreshCw },
   { name: 'Report Generation', icon: FileText },
