@@ -1,0 +1,4 @@
+Receipt ID: S3-01
+Merchant: IndiGo Flight Delhi to Singapore
+Date: 2026-07-02
+Total: INR 11200.00

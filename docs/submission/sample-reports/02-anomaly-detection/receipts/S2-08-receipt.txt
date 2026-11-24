@@ -1,0 +1,4 @@
+Receipt ID: S2-08
+Merchant: Marriott Hotel Goa
+Date: 2026-07-06
+Total: INR 8700.00

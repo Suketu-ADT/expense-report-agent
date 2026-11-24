@@ -1,0 +1,4 @@
+Receipt ID: S4-11
+Merchant: Hyatt Hotel Hyderabad Extension
+Date: 2026-07-09
+Total: INR 7600.00

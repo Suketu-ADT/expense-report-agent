@@ -1,0 +1,4 @@
+Receipt ID: S10-16
+Merchant: Cafe Coffee Day Team Lunch
+Date: 2026-07-08
+Total: INR 950.00

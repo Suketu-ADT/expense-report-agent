@@ -1,0 +1,4 @@
+Receipt ID: S4-02
+Merchant: Taj Hotel Hyderabad
+Date: 2026-07-03
+Total: INR 9100.00

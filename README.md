@@ -29,6 +29,7 @@
 - [API reference](#api-reference)
 - [Testing](#testing)
 - [Known limitations](#known-limitations)
+- [Submission materials](#submission-materials)
 - [Authors](#authors)
 
 ---
@@ -282,13 +283,34 @@ npm run build
 Documented honestly so nobody is surprised:
 
 - **Bounded planning.** The Orchestrator's Planner chooses from a small, pre-declared set of optional stages (Anomaly Detection, Period Comparison); it does not let an LLM freely construct or reorder the LangGraph topology itself — a deliberate choice for an auditable financial pipeline (see [viva_questions.md](jury/viva_questions.md#q0)).
-- **Minimal LLM use.** Only the categorisation fallback calls a model. Arithmetic and review are deliberately LLM-free.
+- **Minimal, non-financial LLM use.** The LLM is only ever called for categorisation fallback (+ its reflection pass), planner intent refinement, and the advisory receipt-matching debate. Arithmetic and review are deliberately LLM-free, and every LLM call has a deterministic, offline-safe fallback.
 - **Run state is in memory.** Live run state (and therefore approve/reject) lives in the server process; restarting the backend loses in-flight runs. Saved reports persist in SQLite.
 - **Agent messages are not persisted.** They are returned with the live run and shown in the UI, but are not written to the database, so `/run/{id}/messages` is empty for live runs.
 - **Recall is informational.** Prior reports are recalled and shown, but do not change the agent's decisions; stored user preferences are not yet used by the pipeline.
-- **No currency conversion.** Amounts in different currencies are summed as-is; the UI and email flag mixed-currency runs.
+- **Currency conversion is display-only.** Foreign amounts are converted to INR for a separate informational figure (live API with an offline fallback); the reconciled `confirmed_total` still sums raw amounts as-is, and the UI/email still flag mixed-currency runs.
 - **Duplicate check matches by expense ID.** If a copied row reuses the original's ID, the Correction agent removes both records.
 - **PDF file name.** The generated report is named after the user ID, so each run overwrites the previous PDF.
+
+## Submission materials
+
+Everything prepared for the sem-end submission, in one place:
+
+| Deliverable | Where |
+|---|---|
+| Source code | This repository |
+| Datasets | `backend/data/` (live + sample CSVs, jury fixtures, evaluation labels), [`ExpenseFlow-Large-Dataset/`](../ExpenseFlow-Large-Dataset) (500-claim regression) |
+| Model files | No trained model is shipped — see [`docs/submission/ExpenseFlow_AI_Full_Technical_Report.docx`](docs/submission/ExpenseFlow_AI_Full_Technical_Report.docx) §13 for why, and what stands in for one |
+| Project report | [`docs/submission/ExpenseFlow_AI_Project_Report.docx`](docs/submission/ExpenseFlow_AI_Project_Report.docx) — the required 10-page report (Title, Objective, Design Principles, Technical Model Detail, Block Diagram, Flowchart, step-by-step screenshots), also exported as `.pdf` |
+| Full technical report | [`docs/submission/ExpenseFlow_AI_Full_Technical_Report.docx`](docs/submission/ExpenseFlow_AI_Full_Technical_Report.docx) — a deeper reference covering the same ground plus guardrails, ethics, observability and evaluation detail (also exported as `.pdf`) |
+| Final presentation (PPT) | Published as a Slides artifact — download as `.pptx` or PDF from its Share/Export menu |
+| README | This file |
+| Screenshots | [`docs/screenshots/submission/`](docs/screenshots/submission) |
+| Sample reports (demo) | [`docs/submission/sample-reports/`](docs/submission/sample-reports) — 10 scenarios, each run end-to-end through the real backend, 2–3 pages |
+| Test results | [`docs/TEST_RESULTS.md`](docs/TEST_RESULTS.md) |
+| Demo video script | [`docs/DEMO_VIDEO_SCRIPT.md`](docs/DEMO_VIDEO_SCRIPT.md) (shot-by-shot, for self-recording) |
+| November changelog | [`docs/submission/ExpenseFlow_AI_November_Changes.docx`](docs/submission/ExpenseFlow_AI_November_Changes.docx) — what was added this month, committed and uncommitted |
+| Viva preparation guide | [`docs/submission/ExpenseFlow_AI_Viva_Preparation_Guide.docx`](docs/submission/ExpenseFlow_AI_Viva_Preparation_Guide.docx) — pitch, numbers, Q&A bank, taxonomy, anticipated pushback, demo click-path |
+| Jury documentation | [`jury/`](jury) — extended problem statement, demo guide, viva prep, agent taxonomy, ethics & compliance, evaluation report, observability notes |
 
 ## Authors
 

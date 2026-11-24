@@ -1,0 +1,9 @@
+expense_id,date,merchant,amount,currency
+BASE-01,2026-06-03,"IndiGo Flight Delhi to Pune",6200.00,INR
+BASE-02,2026-06-04,"Taj Hotel Pune",9400.00,INR
+BASE-03,2026-06-05,"Uber Airport Transfer",420.00,INR
+BASE-04,2026-06-05,"Cafe Coffee Day Lunch",650.00,INR
+BASE-05,2026-06-06,"Ola Client Site Taxi",380.00,INR
+BASE-06,2026-06-07,"Starbucks Client Meeting",540.00,INR
+BASE-07,2026-06-10,"Marriott Hotel Pune",8700.00,INR
+BASE-08,2026-06-12,"Vistara Flight Pune to Delhi",5900.00,INR

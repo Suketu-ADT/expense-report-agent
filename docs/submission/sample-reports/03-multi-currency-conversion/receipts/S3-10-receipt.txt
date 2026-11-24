@@ -1,0 +1,4 @@
+Receipt ID: S3-10
+Merchant: Vistara Flight London to Delhi
+Date: 2026-07-08
+Total: INR 48500.00

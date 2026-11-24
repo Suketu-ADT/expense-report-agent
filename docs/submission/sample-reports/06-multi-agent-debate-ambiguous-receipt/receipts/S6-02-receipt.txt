@@ -1,0 +1,4 @@
+Receipt ID: S6-02
+Merchant: Taj Hotel Kolkata
+Date: 2026-07-03
+Total: INR 9200.00

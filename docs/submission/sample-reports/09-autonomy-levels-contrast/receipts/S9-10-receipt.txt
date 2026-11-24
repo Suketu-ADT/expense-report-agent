@@ -1,0 +1,4 @@
+Receipt ID: S9-10
+Merchant: Swiggy Team Lunch
+Date: 2026-07-09
+Total: INR 1060.00

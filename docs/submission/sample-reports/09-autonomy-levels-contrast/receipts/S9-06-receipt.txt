@@ -1,0 +1,4 @@
+Receipt ID: S9-06
+Merchant: Marriott Hotel Chandigarh
+Date: 2026-07-06
+Total: INR 8200.00

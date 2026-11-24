@@ -1,0 +1,4 @@
+Receipt ID: RC-B2
+Merchant: Riverside Cafe Lunch
+Date: 2026-07-04
+Total: INR 690.00

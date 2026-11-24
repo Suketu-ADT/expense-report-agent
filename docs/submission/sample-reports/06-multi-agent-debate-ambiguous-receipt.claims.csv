@@ -1,0 +1,12 @@
+expense_id,date,merchant,amount,currency
+S6-01,2026-07-02,"IndiGo Flight Delhi to Kolkata",6700.00,INR
+S6-02,2026-07-03,"Taj Hotel Kolkata",9200.00,INR
+S6-03,2026-07-04,"Riverside Cafe Lunch",650.00,INR
+S6-04,2026-07-04,"Ola Client Site Taxi",370.00,INR
+S6-05,2026-07-05,"Starbucks Client Meeting",560.00,INR
+S6-06,2026-07-06,"Marriott Hotel Kolkata",8400.00,INR
+S6-07,2026-07-07,"Vistara Flight Kolkata to Delhi",6050.00,INR
+S6-08,2026-07-08,"Zomato Dinner Order",900.00,INR
+S6-09,2026-07-09,"City Metro Card Topup",210.00,INR
+S6-10,2026-07-09,"Swiggy Team Lunch",1080.00,INR
+S6-11,2026-07-10,"Hyatt Hotel Kolkata Extension",7300.00,INR

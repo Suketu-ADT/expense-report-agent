@@ -1,0 +1,4 @@
+Receipt ID: S8-09
+Merchant: Vistara Flight Jaipur to Delhi
+Date: 2026-07-07
+Total: INR 5900.00

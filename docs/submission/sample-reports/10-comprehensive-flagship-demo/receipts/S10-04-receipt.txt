@@ -1,0 +1,4 @@
+Receipt ID: S10-04
+Merchant: Starbucks Client Meeting
+Date: 2026-07-02
+Total: INR 610.00

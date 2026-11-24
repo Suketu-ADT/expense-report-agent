@@ -1,0 +1,11 @@
+expense_id,date,merchant,amount,currency
+S5-01,2026-07-02,"IndiGo Flight Delhi to Dubai",14200.00,INR
+S5-02,2026-07-03,"Hilton Hotel Dubai",260.00,USD
+S5-03,2026-07-03,"Uber Airport Transfer Dubai",22.00,USD
+S5-04,2026-07-04,"Client Gift and Hospitality",8600.00,INR
+S5-05,2026-07-04,"Starbucks Client Meeting Dubai",14.50,USD
+S5-06,2026-07-05,"Emirates Flight Dubai to Delhi",16800.00,INR
+S5-07,2026-07-06,"Cafe Coffee Day Lunch Delhi",640.00,INR
+S5-08,2026-07-06,"Ola Client Site Taxi",310.00,INR
+S5-09,2026-07-07,"Zomato Dinner Order",920.00,INR
+S5-10,2026-07-08,"City Metro Card Topup",180.00,INR

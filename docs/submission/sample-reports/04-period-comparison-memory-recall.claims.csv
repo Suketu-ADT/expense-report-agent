@@ -1,0 +1,12 @@
+expense_id,date,merchant,amount,currency
+S4-01,2026-07-02,"IndiGo Flight Delhi to Hyderabad",6900.00,INR
+S4-02,2026-07-03,"Taj Hotel Hyderabad",9100.00,INR
+S4-03,2026-07-03,"Uber Airport Transfer",460.00,INR
+S4-04,2026-07-04,"Cafe Coffee Day Lunch",710.00,INR
+S4-05,2026-07-04,"Ola Client Site Taxi",340.00,INR
+S4-06,2026-07-05,"Starbucks Client Meeting",580.00,INR
+S4-07,2026-07-06,"Marriott Hotel Hyderabad",8300.00,INR
+S4-08,2026-07-07,"Vistara Flight Hyderabad to Delhi",6100.00,INR
+S4-09,2026-07-08,"Zomato Dinner Order",890.00,INR
+S4-10,2026-07-09,"City Metro Card Topup",220.00,INR
+S4-11,2026-07-09,"Hyatt Hotel Hyderabad Extension",7600.00,INR

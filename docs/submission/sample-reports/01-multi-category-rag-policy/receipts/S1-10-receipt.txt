@@ -1,0 +1,4 @@
+Receipt ID: S1-10
+Merchant: Zomato Dinner Order
+Date: 2026-07-06
+Total: INR 980.00

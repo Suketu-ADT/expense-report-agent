@@ -1,0 +1,4 @@
+Receipt ID: S4-08
+Merchant: Vistara Flight Hyderabad to Delhi
+Date: 2026-07-07
+Total: INR 6100.00

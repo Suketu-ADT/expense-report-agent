@@ -1,0 +1,4 @@
+Receipt ID: S2-04
+Merchant: Cafe Coffee Day Lunch
+Date: 2026-07-04
+Total: INR 720.00

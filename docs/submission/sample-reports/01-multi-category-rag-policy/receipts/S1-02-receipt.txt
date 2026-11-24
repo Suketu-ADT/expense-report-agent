@@ -1,0 +1,4 @@
+Receipt ID: S1-02
+Merchant: Vistara Flight Mumbai to Chennai
+Date: 2026-07-02
+Total: INR 6420.00

@@ -1,0 +1,4 @@
+Receipt ID: S6-01
+Merchant: IndiGo Flight Delhi to Kolkata
+Date: 2026-07-02
+Total: INR 6700.00

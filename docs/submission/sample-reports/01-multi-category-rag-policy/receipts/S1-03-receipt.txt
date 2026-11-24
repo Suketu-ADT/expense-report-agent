@@ -1,0 +1,4 @@
+Receipt ID: S1-03
+Merchant: Taj Hotel Bengaluru
+Date: 2026-07-03
+Total: INR 9600.00

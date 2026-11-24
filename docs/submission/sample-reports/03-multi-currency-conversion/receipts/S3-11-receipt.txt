@@ -1,0 +1,4 @@
+Receipt ID: S3-11
+Merchant: Cafe Coffee Day Lunch Delhi
+Date: 2026-07-08
+Total: INR 610.00

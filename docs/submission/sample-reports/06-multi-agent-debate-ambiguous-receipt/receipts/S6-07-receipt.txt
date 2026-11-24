@@ -1,0 +1,4 @@
+Receipt ID: S6-07
+Merchant: Vistara Flight Kolkata to Delhi
+Date: 2026-07-07
+Total: INR 6050.00

@@ -1,0 +1,4 @@
+Receipt ID: S7-02
+Merchant: Taj Hotel Lucknow
+Date: 2026-07-03
+Total: INR 8900.00

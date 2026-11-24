@@ -1,0 +1,4 @@
+Receipt ID: S6-11
+Merchant: Hyatt Hotel Kolkata Extension
+Date: 2026-07-10
+Total: INR 7300.00

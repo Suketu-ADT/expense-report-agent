@@ -1,0 +1,13 @@
+expense_id,date,merchant,amount,currency
+S3-01,2026-07-02,"IndiGo Flight Delhi to Singapore",11200.00,INR
+S3-02,2026-07-03,"Marriott Hotel Singapore",310.00,USD
+S3-03,2026-07-03,"Uber Airport Transfer Singapore",28.50,USD
+S3-04,2026-07-04,"Starbucks Client Meeting Singapore",9.80,USD
+S3-05,2026-07-05,"Lufthansa Flight Singapore to Frankfurt",640.00,EUR
+S3-06,2026-07-06,"Hyatt Hotel Frankfurt",245.00,EUR
+S3-07,2026-07-06,"Taxi Frankfurt Client Visit",38.00,EUR
+S3-08,2026-07-07,"Hilton Hotel London",198.00,GBP
+S3-09,2026-07-07,"Metro Card Topup London",12.40,GBP
+S3-10,2026-07-08,"Vistara Flight London to Delhi",48500.00,INR
+S3-11,2026-07-08,"Cafe Coffee Day Lunch Delhi",610.00,INR
+S3-12,2026-07-09,"Ola Airport Transfer Delhi",390.00,INR

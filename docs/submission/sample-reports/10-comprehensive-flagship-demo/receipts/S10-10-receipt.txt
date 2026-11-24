@@ -1,0 +1,4 @@
+Receipt ID: S10-10
+Merchant: Hyatt Hotel Chennai
+Date: 2026-07-05
+Total: INR 7700.00

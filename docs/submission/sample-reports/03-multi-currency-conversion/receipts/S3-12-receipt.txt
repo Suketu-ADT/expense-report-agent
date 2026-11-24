@@ -1,0 +1,4 @@
+Receipt ID: S3-12
+Merchant: Ola Airport Transfer Delhi
+Date: 2026-07-09
+Total: INR 390.00

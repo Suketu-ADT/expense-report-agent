@@ -1,0 +1,4 @@
+Receipt ID: S10-15
+Merchant: Team Offsite Venue Booking
+Date: 2026-07-08
+Total: INR 15200.00

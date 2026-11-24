@@ -1,0 +1,4 @@
+Receipt ID: S6-09
+Merchant: City Metro Card Topup
+Date: 2026-07-09
+Total: INR 210.00

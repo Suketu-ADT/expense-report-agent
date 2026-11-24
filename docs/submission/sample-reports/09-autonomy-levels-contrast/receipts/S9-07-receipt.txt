@@ -1,0 +1,4 @@
+Receipt ID: S9-07
+Merchant: Vistara Flight Chandigarh to Delhi
+Date: 2026-07-07
+Total: INR 5850.00

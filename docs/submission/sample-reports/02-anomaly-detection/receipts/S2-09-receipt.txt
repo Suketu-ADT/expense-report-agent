@@ -1,0 +1,4 @@
+Receipt ID: S2-09
+Merchant: Vistara Flight Goa to Mumbai
+Date: 2026-07-07
+Total: INR 5900.00

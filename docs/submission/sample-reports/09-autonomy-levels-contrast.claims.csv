@@ -1,0 +1,11 @@
+expense_id,date,merchant,amount,currency
+S9-01,2026-07-02,"IndiGo Flight Delhi to Chandigarh",6050.00,INR
+S9-02,2026-07-03,"Taj Hotel Chandigarh",8600.00,INR
+S9-03,2026-07-04,"Uber Airport Transfer",400.00,INR
+S9-04,2026-07-04,"Cafe Coffee Day Lunch",690.00,INR
+S9-05,2026-07-05,"Ola Client Site Taxi",330.00,INR
+S9-06,2026-07-06,"Marriott Hotel Chandigarh",8200.00,INR
+S9-07,2026-07-07,"Vistara Flight Chandigarh to Delhi",5850.00,INR
+S9-08,2026-07-08,"Zomato Dinner Order",910.00,INR
+S9-09,2026-07-08,"City Metro Card Topup",200.00,INR
+S9-10,2026-07-09,"Swiggy Team Lunch",1060.00,INR

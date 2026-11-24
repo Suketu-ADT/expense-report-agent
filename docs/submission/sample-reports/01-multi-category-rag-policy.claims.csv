@@ -1,0 +1,15 @@
+expense_id,date,merchant,amount,currency
+S1-01,2026-07-02,"IndiGo Flight Delhi to Bengaluru",7850.00,INR
+S1-02,2026-07-02,"Vistara Flight Mumbai to Chennai",6420.00,INR
+S1-03,2026-07-03,"Taj Hotel Bengaluru",9600.00,INR
+S1-04,2026-07-03,"Marriott Hotel Chennai",8900.00,INR
+S1-05,2026-07-04,"Uber Airport Transfer",480.00,INR
+S1-06,2026-07-04,"Ola Client Site Taxi",350.00,INR
+S1-07,2026-07-04,"City Metro Card Topup",200.00,INR
+S1-08,2026-07-05,"Cafe Coffee Day Team Lunch",1150.00,INR
+S1-09,2026-07-05,"Starbucks Client Meeting",620.00,INR
+S1-10,2026-07-06,"Zomato Dinner Order",980.00,INR
+S1-11,2026-07-06,"Swiggy Team Lunch",1340.00,INR
+S1-12,2026-07-07,"Hyatt Hotel Chennai",7700.00,INR
+S1-13,2026-07-08,"Prime Business Supplies",1450.00,INR
+S1-14,2026-07-09,"Conference Registration Fee",3200.00,INR

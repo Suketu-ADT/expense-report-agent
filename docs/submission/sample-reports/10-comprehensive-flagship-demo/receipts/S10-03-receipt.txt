@@ -1,0 +1,4 @@
+Receipt ID: S10-03
+Merchant: Uber Airport Transfer
+Date: 2026-07-02
+Total: INR 480.00

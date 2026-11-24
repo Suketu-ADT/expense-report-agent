@@ -1,0 +1,4 @@
+Receipt ID: S2-01
+Merchant: IndiGo Flight Delhi to Goa
+Date: 2026-07-02
+Total: INR 6400.00

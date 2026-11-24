@@ -1,0 +1,12 @@
+expense_id,date,merchant,amount,currency
+S7-01,2026-07-02,"IndiGo Flight Delhi to Lucknow",6300.00,INR
+S7-02,2026-07-03,"Taj Hotel Lucknow",8900.00,INR
+S7-03,2026-07-04,"City Taxi Service",350.00,INR
+S7-04,2026-07-04,"City Taxi Service",355.00,INR
+S7-05,2026-07-05,"Starbucks Client Meeting",540.00,INR
+S7-06,2026-07-06,"Marriott Hotel Lucknow",8100.00,INR
+S7-07,2026-07-07,"Vistara Flight Lucknow to Delhi",5950.00,INR
+S7-08,2026-07-08,"Zomato Dinner Order",870.00,INR
+S7-09,2026-07-09,"City Metro Card Topup",230.00,INR
+S7-10,2026-07-09,"Swiggy Team Lunch",1040.00,INR
+S7-11,2026-07-10,"Hyatt Hotel Lucknow Extension",7200.00,INR

@@ -1,0 +1,4 @@
+Receipt ID: S1-01
+Merchant: IndiGo Flight Delhi to Bengaluru
+Date: 2026-07-02
+Total: INR 7850.00

@@ -1,0 +1,4 @@
+Receipt ID: S10-13
+Merchant: Conference Registration Fee
+Date: 2026-07-07
+Total: INR 3200.00

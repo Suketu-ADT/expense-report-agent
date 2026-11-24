@@ -1,0 +1,4 @@
+Receipt ID: S7-06
+Merchant: Marriott Hotel Lucknow
+Date: 2026-07-06
+Total: INR 8100.00

@@ -1,0 +1,4 @@
+Receipt ID: S7-07
+Merchant: Vistara Flight Lucknow to Delhi
+Date: 2026-07-07
+Total: INR 5950.00

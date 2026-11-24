@@ -1,0 +1,13 @@
+expense_id,date,merchant,amount,currency
+S2-01,2026-07-02,"IndiGo Flight Delhi to Goa",6400.00,INR
+S2-02,2026-07-03,"Taj Hotel Goa",9800.00,INR
+S2-03,2026-07-04,"Uber Airport Transfer",9500.00,INR
+S2-04,2026-07-04,"Cafe Coffee Day Lunch",720.00,INR
+S2-05,2026-07-05,"Ola Client Site Taxi",410.00,INR
+S2-06,2026-07-05,"Starbucks Client Meeting",590.00,INR
+S2-07,2026-07-06,"Team Offsite Venue Booking",15200.00,INR
+S2-08,2026-07-06,"Marriott Hotel Goa",8700.00,INR
+S2-09,2026-07-07,"Vistara Flight Goa to Mumbai",5900.00,INR
+S2-10,2026-07-07,"Zomato Dinner Order",860.00,INR
+S2-11,2026-07-08,"City Metro Card Topup",250.00,INR
+S2-12,2026-07-09,"Swiggy Team Lunch",1120.00,INR

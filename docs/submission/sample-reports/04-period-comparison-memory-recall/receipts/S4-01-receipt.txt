@@ -1,0 +1,4 @@
+Receipt ID: S4-01
+Merchant: IndiGo Flight Delhi to Hyderabad
+Date: 2026-07-02
+Total: INR 6900.00

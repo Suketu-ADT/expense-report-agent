@@ -1,0 +1,4 @@
+Receipt ID: S5-01
+Merchant: IndiGo Flight Delhi to Dubai
+Date: 2026-07-02
+Total: INR 14200.00

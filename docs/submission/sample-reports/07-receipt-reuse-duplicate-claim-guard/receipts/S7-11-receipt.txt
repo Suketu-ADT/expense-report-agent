@@ -1,0 +1,4 @@
+Receipt ID: S7-11
+Merchant: Hyatt Hotel Lucknow Extension
+Date: 2026-07-10
+Total: INR 7200.00

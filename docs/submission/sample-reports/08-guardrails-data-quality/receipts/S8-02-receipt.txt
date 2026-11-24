@@ -1,0 +1,4 @@
+Receipt ID: S8-02
+Merchant: Taj Hotel Jaipur
+Date: 2026-07-03
+Total: INR 8700.00

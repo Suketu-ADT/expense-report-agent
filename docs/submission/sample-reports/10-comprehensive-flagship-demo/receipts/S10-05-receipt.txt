@@ -1,0 +1,4 @@
+Receipt ID: S10-05
+Merchant: Ola Client Site Taxi
+Date: 2026-07-03
+Total: INR 360.00
